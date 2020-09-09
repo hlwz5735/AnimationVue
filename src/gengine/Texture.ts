@@ -1,4 +1,5 @@
 import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
+import Color from '@/gengine/types/Color'
 
 enum LoadStatus {
   UNLOADED = 0,
@@ -15,8 +16,20 @@ export default class Texture {
     return this.loadStatus === LoadStatus.LOADED
   }
 
+  static async createEmpty(width: number = 32, height: number = 32, color: Color = Color.BLACK) {
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    const context = canvas.getContext('2d')!
+    context.fillStyle = color.toString()
+    context.fillRect(0, 0, width, height)
+
+    return Texture.create(await createImageBitmap(canvas), `native-${width}-${height}-${color.toString()}`)
+  }
+
   static async createFromFile(file: File, isRemoveBackgroundColor = false,
                               isClip = false): Promise<Texture> {
+    // createImageBitmap方法可以直接从文件对象中生成 ImageBitmap
     const bitmap = await createImageBitmap(file)
     return Texture.create(bitmap, file.name, isRemoveBackgroundColor, isClip)
   }

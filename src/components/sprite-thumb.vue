@@ -14,7 +14,7 @@ interface ComponentData {
   ctx: CanvasRenderingContext2D
 }
 
-const component = Vue.extend({
+const vm = Vue.extend({
   name: 'SpriteThumb',
   props: {
     sprite: { type: Sprite },
@@ -66,6 +66,13 @@ const component = Vue.extend({
   }
 })
 
+/**
+ * 计算该图像的纹理在目标canvas中的自适应位置
+ *
+ * @param sourceRect 源纹理的位置矩形
+ * @param destWidth 目标宽度
+ * @param destHeight 目标高度
+ */
 function centerRect(sourceRect: Rect, destWidth: number, destHeight: number): Rect {
   if (sourceRect.width <= destWidth && sourceRect.height <= destHeight) {
     return Rect.new((destWidth - sourceRect.width) / 2, (destHeight - sourceRect.height) / 2,
@@ -93,7 +100,7 @@ function centerRect(sourceRect: Rect, destWidth: number, destHeight: number): Re
   }
 }
 
-export default component
+export default vm
 </script>
 
 <style lang="less" scoped>

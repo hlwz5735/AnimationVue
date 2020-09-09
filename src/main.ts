@@ -5,6 +5,7 @@ import store from './store'
 import './registerServiceWorker'
 import 'ant-design-vue/dist/antd.css'
 import './plugins/ant-design-vue.js'
+import '@/assets/common-style.less'
 
 Vue.config.productionTip = false
 
