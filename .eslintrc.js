@@ -9,6 +9,13 @@ module.exports = {
     '@vue/typescript'
   ],
   rules: {
+    indent: ['off'],
+    // indent: ['error', 2, {
+    //   'FunctionDeclaration': {
+    //     'parameters': 'first'
+    //   }
+    // }],
+    'space-before-function-paren': ['off', 'never'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
