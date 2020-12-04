@@ -1,6 +1,6 @@
 <template>
   <div class="padding-thin">
-    <div>
+    <div v-show="showColorSelector">
       颜色选择：
       <input type="color" v-model="previewBackgroundColor" @change="drawLibTexture">
     </div>
@@ -17,15 +17,20 @@ interface DataType {
   previewBackgroundColor: Color
 }
 
+/**
+ * 用于大纹理预览的组件，自带一个颜色选择器
+ */
 const vm = Vue.extend({
   name: 'texture-preview',
   data(): DataType {
     return {
-      previewBackgroundColor: Color.WHITE
+      previewBackgroundColor: this.defaultBackgroundColor
     }
   },
   props: {
-    texture: { type: Texture }
+    texture: { type: Texture },
+    showColorSelector: { type: Boolean, default: true },
+    defaultBackgroundColor: { type: Color, default: Color.WHITE }
   },
   mounted() {
     this.drawLibTexture()

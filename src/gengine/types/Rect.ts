@@ -1,7 +1,7 @@
 import Vec2 from '@/gengine/types/Vec2'
 
 export default class Rect {
-
+  // eslint-disable-next-line no-useless-constructor
   private constructor(public x = 0, public y = 0, public width: number = 0, public height: number = 0) {}
 
   static new(x = 0, y = 0, width = 0, height = 0) {
@@ -9,8 +9,8 @@ export default class Rect {
   }
 
   equals(other: Rect) {
-    return other && (this.x === other.x) && (this.y === other.y)
-      && (this.width === other.width) && (this.height === other.height)
+    return other && (this.x === other.x) && (this.y === other.y) &&
+        (this.width === other.width) && (this.height === other.height)
   }
 
   private _equalsToZero() {
@@ -45,15 +45,12 @@ export default class Rect {
     if (!other) {
       return false
     }
-    return !((this.x >= other.x)
-        || (this.y >= other.y)
-        || (this.maxX <= other.maxX)
-        || (this.maxY <= other.maxY))
+    return !((this.x >= other.x) || (this.y >= other.y) ||
+        (this.maxX <= other.maxX) || (this.maxY <= other.maxY))
   }
 
   containsPoint(p: Vec2) {
-    return (p.x >= this.minX) && (p.x <= this.maxX)
-        && (p.y >= this.minY) && (p.y <= this.maxY)
+    return (p.x >= this.minX) && (p.x <= this.maxX) && (p.y >= this.minY) && (p.y <= this.maxY)
   }
 
   intersects(other: Rect) {
@@ -79,5 +76,4 @@ export default class Rect {
     intersection.height = Math.min(this.maxY, other.maxY) - intersection.minY
     return intersection
   }
-
 }

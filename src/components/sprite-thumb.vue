@@ -43,6 +43,11 @@ const vm = Vue.extend({
     this.drawThumb()
   },
   watch: {
+    sprite(val: Sprite) {
+      this.canvasRef.width = val.width
+      this.canvasRef.height = val.height
+      this.drawThumb()
+    },
     width(val) {
       this.canvasRef.width = val
       this.drawThumb()
