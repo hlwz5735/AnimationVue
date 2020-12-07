@@ -46,5 +46,6 @@ export function getClipRect(image: HTMLImageElement | HTMLCanvasElement | ImageB
       }
     }
   }
-  return Rect.new(minX, minY, maxX - minX, maxY - minY)
+  // 因为下标从0开始，所以应该是结尾像素点位置+1得到宽度
+  return Rect.new(minX, minY, maxX - minX + 1, maxY - minY + 1)
 }

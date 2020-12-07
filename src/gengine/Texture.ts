@@ -11,9 +11,37 @@ export default class Texture {
   public loadStatus: LoadStatus = LoadStatus.PENDING;
   public bitmap: ImageBitmap = null!;
   public path: string = ''
+  private canvas: HTMLCanvasElement | null = null
 
   isLoaded() {
     return this.loadStatus === LoadStatus.LOADED
+  }
+
+  getCanvas() {
+    if (!this.canvas) {
+      this.canvas = document.createElement('canvas')
+      this.canvas.width = this.width
+      this.canvas.height = this.height
+      const ctx = this.canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(this.bitmap, 0, 0)
+      }
+    }
+    return this.canvas
+  }
+
+  async updateBitmap() {
+    if (this.canvas) {
+      this.bitmap = await createImageBitmap(this.canvas)
+    }
+  }
+
+  get width() {
+    return this.bitmap.width
+  }
+
+  get height() {
+    return this.bitmap.height
   }
 
   static async createEmpty(width: number = 32, height: number = 32, color: Color = Color.BLACK) {
