@@ -30,8 +30,7 @@ export async function removeBackgroundColor(bitmap: ImageBitmap, bgColor: Color 
 
   ctx.putImageData(imageData, 0, 0)
 
-  const result = await createImageBitmap(canvas)
-  return Promise.resolve(result)
+  return createImageBitmap(canvas)
 }
 
 export function clipBitmap(bitmap: ImageBitmap) {

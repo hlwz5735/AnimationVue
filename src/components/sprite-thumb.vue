@@ -17,7 +17,7 @@ interface ComponentData {
 const vm = Vue.extend({
   name: 'SpriteThumb',
   props: {
-    sprite: { type: Sprite, default: () => null },
+    sprite: { type: Sprite, required: true },
     width: {
       type: Number,
       default: 64
@@ -35,8 +35,6 @@ const vm = Vue.extend({
   },
   watch: {
     sprite(val: Sprite) {
-      this.canvasRef.width = val.width
-      this.canvasRef.height = val.height
       this.drawThumb()
     },
     width(val) {
@@ -112,5 +110,6 @@ export default vm
   .canvas-wrapper {
     padding: 5px;
     border: 1px dashed gray;
+    display: inline-block;
   }
 </style>

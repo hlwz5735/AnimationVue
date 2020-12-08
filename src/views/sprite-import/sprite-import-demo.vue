@@ -11,11 +11,13 @@
         key="lib-texture"
         tab="图集预览"
       >
-        <texture-preview
-          ref="libTexturePreview"
-          :texture="libTexture"
-          :default-background-color="libTexturePreviewBackgroundColor"
-        />
+        <div style="overflow: auto">
+          <texture-preview
+            ref="libTexturePreview"
+            :texture="libTexture"
+            :default-background-color="libTexturePreviewBackgroundColor"
+          />
+        </div>
       </a-tab-pane>
     </a-tabs>
   </div>

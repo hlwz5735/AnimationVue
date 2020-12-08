@@ -41,32 +41,29 @@ export default class TexturePacker {
   async putSubTexture(texture: Texture): Promise<Rect> {
     const region = this.findRegion(texture.width, texture.height, this.rootRegion)
     if (region) {
-      const newRegion = this.splitRegion(texture.width, texture.height, region)
-      if (newRegion && this.texture) {
+      if (this.splitRegion(texture.width, texture.height, region) && this.texture) {
         const canvas = this.texture.getCanvas()
-        const ctx = canvas.getContext('2d')
-        if (ctx) {
-          ctx.drawImage(texture.bitmap, newRegion.area.x, newRegion.area.y)
-          await this.texture.updateBitmap()
-          return newRegion.area
-        }
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(texture.bitmap, region.area.x, region.area.y)
+        await this.texture.updateBitmap()
+        return Rect.new(region.area.x, region.area.y, texture.width, texture.height)
       }
     }
     throw new Error('查找精灵分区失败！')
   }
 
-  splitRegion(width: number, height: number, rootRegion: Region): Region {
-    rootRegion.isEmpty = false
+  splitRegion(width: number, height: number, region: Region): Region {
+    region.isEmpty = false
 
-    rootRegion.bottomRegion = new Region()
-    rootRegion.bottomRegion.area = Rect.new(rootRegion.x, rootRegion.y + height,
-      rootRegion.width, rootRegion.height - height)
+    region.bottomRegion = new Region()
+    region.bottomRegion.area = Rect.new(region.x, region.y + height,
+      region.width, region.height - height)
 
-    rootRegion.rightRegion = new Region()
-    rootRegion.rightRegion.area = Rect.new(rootRegion.x + width, rootRegion.y,
-      rootRegion.width - width, height)
+    region.rightRegion = new Region()
+    region.rightRegion.area = Rect.new(region.x + width, region.y,
+      region.width - width, height)
 
-    return rootRegion
+    return region
   }
 
   private findRegion(width: number, height: number, region: Region): Region | null {

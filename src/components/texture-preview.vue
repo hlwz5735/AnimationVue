@@ -30,7 +30,7 @@ interface DataType {
 const vm = Vue.extend({
   name: 'TexturePreview',
   props: {
-    texture: { type: Texture, default: () => null },
+    texture: { type: Texture, required: true },
     showColorSelector: { type: Boolean, default: true },
     defaultBackgroundColor: { type: Color, default: Color.WHITE }
   },

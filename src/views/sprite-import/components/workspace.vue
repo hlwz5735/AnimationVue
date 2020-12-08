@@ -14,11 +14,12 @@
       </a-upload>
       <a-button>从合图导入</a-button>
     </a-space>
-
-    <sprite-thumb
-      v-if="tempSprite"
-      :sprite="tempSprite"
-    />
+    <div>
+      <sprite-thumb
+        v-if="tempSprite"
+        :sprite="tempSprite"
+      />
+    </div>
   </div>
 </template>
 
