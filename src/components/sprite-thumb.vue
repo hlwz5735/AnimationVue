@@ -5,48 +5,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import Sprite from '@/gengine/Sprite'
 import Rect from '@/gengine/types/Rect'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-interface ComponentData {
-  canvasRef: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D
-}
+@Component
+export default class SpriteThumb extends Vue {
+  @Prop()
+  private sprite!: Sprite
+  @Prop()
+  private width: number = 64
+  @Prop()
+  private height: number = 64
 
-const vm = Vue.extend({
-  name: 'SpriteThumb',
-  props: {
-    sprite: { type: Sprite, required: true },
-    width: {
-      type: Number,
-      default: 64
-    },
-    height: {
-      type: Number,
-      default: 64
-    }
-  },
-  data(): ComponentData {
-    return {
-      canvasRef: null!,
-      ctx: null!
-    }
-  },
-  watch: {
-    sprite(val: Sprite) {
-      this.drawThumb()
-    },
-    width(val) {
-      this.canvasRef.width = val
-      this.drawThumb()
-    },
-    height(val) {
-      this.canvasRef.height = val
-      this.drawThumb()
-    }
-  },
-  mounted(): void {
+  canvasRef!: HTMLCanvasElement
+  ctx!: CanvasRenderingContext2D
+
+  mounted() {
     this.canvasRef = this.$refs.canvasRef as HTMLCanvasElement
     this.ctx = this.canvasRef.getContext('2d')!
 
@@ -54,20 +29,36 @@ const vm = Vue.extend({
     this.canvasRef.height = this.height
 
     this.drawThumb()
-  },
-  methods: {
-    drawThumb(): void {
-      this.ctx.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height)
-
-      const { minX: sx, minY: sy, width: sw, height: sh } = this.sprite.sourceRect
-
-      const destRect = centerRect(this.sprite.sourceRect, this.canvasRef.width, this.canvasRef.height)
-
-      this.ctx.drawImage(this.sprite.texture.bitmap, sx, sy, sw, sh,
-        destRect.minX, destRect.minY, destRect.width, destRect.height)
-    }
   }
-})
+
+  drawThumb(): void {
+    this.ctx.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height)
+
+    const { minX: sx, minY: sy, width: sw, height: sh } = this.sprite.sourceRect
+
+    const destRect = centerRect(this.sprite.sourceRect, this.canvasRef.width, this.canvasRef.height)
+
+    this.ctx.drawImage(this.sprite.texture.bitmap, sx, sy, sw, sh,
+      destRect.minX, destRect.minY, destRect.width, destRect.height)
+  }
+
+  @Watch('sprite')
+  onSpriteChange(val: Sprite) {
+    this.drawThumb()
+  }
+
+  @Watch('width')
+  onWidthChange(val: number) {
+    this.canvasRef.width = val
+    this.drawThumb()
+  }
+
+  @Watch('height')
+  onHeightChange(val: number) {
+    this.canvasRef.height = val
+    this.drawThumb()
+  }
+}
 
 /**
  * 计算该图像的纹理在目标canvas中的自适应位置
@@ -102,8 +93,6 @@ function centerRect(sourceRect: Rect, destWidth: number, destHeight: number): Re
     }
   }
 }
-
-export default vm
 </script>
 
 <style lang="less" scoped>
