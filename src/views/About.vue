@@ -1,11 +1,14 @@
 <template>
   <div>
-    <a-upload name="file" :multiple="true"
-              :before-upload="onFileSelected"
-              :custom-request="() => {}"
-              :show-upload-list="false">
+    <a-upload
+      name="file"
+      :multiple="true"
+      :before-upload="onFileSelected"
+      :custom-request="() => {}"
+      :show-upload-list="false"
+    >
       <a-button>
-        <a-icon type="upload"/>
+        <a-icon type="upload" />
         添加图片
       </a-button>
     </a-upload>
@@ -13,8 +16,13 @@
     <a-slider v-model="thumbWidth" />
 
     <div class="thumb-list">
-      <template v-for="sprite in sprites" >
-        <sprite-thumb :key="sprite.texture.path" :sprite="sprite" :width="thumbWidth" :height="thumbWidth" />
+      <template v-for="sprite in sprites">
+        <sprite-thumb
+          :key="sprite.texture.path"
+          :sprite="sprite"
+          :width="thumbWidth"
+          :height="thumbWidth"
+        />
       </template>
     </div>
   </div>

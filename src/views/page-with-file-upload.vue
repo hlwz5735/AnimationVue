@@ -18,14 +18,18 @@
       <a-layout>
         <a-layout-content>
           <about />
-<!--          <canvas ref="canvasRef" width="5000" height="5000" />-->
+          <!--          <canvas ref="canvasRef" width="5000" height="5000" />-->
           <canvas ref="canvasRef" />
         </a-layout-content>
         <a-layout-footer>footer</a-layout-footer>
       </a-layout>
       <a-layout-sider theme="light">
         <a-card title="库">
-          <a-button slot="extra" icon="plus" type="link" />
+          <a-button
+            slot="extra"
+            icon="plus"
+            type="link"
+          />
           hey
         </a-card>
       </a-layout-sider>

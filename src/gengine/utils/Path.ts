@@ -11,11 +11,11 @@ const path = {
    */
   join (...args: string[]): string {
     const l = args.length
-    let result = ""
+    let result = ''
     for (let i = 0; i < l; i++) {
-      result = (result + (result === "" ? "" : "/") + args[i]).replace(/(\/|\\\\)$/, "");
+      result = (result + (result === '' ? '' : '/') + args[i]).replace(/(\/|\\\\)$/, '')
     }
-    return result;
+    return result
   },
 
   /**
@@ -29,7 +29,7 @@ const path = {
    * @returns {*}
    */
   extname (pathStr: string): string | null {
-    const temp = /(\.[^\.\/\?\\]*)(\?.*)?$/.exec(pathStr)
+    const temp = /(\.[^./?\\]*)(\?.*)?$/.exec(pathStr)
     return temp ? temp[1] : null
   },
 
@@ -39,10 +39,9 @@ const path = {
    * @returns {string}
    */
   mainFileName(fileName: string): string {
-    if(fileName) {
-      const idx = fileName.lastIndexOf(".")
-      if(idx !== -1)
-        return fileName.substring(0,idx)
+    if (fileName) {
+      const idx = fileName.lastIndexOf('.')
+      if (idx !== -1) { return fileName.substring(0, idx) }
     }
     return fileName
   },
@@ -60,10 +59,10 @@ const path = {
    * @returns {*}
    */
   basename (pathStr: string, extname?: string): string | null {
-    const index = pathStr.indexOf("?")
-    if (index > 0) pathStr = pathStr.substring(0, index);
-    const reg = /(\/|\\\\)([^(\/|\\\\)]+)$/g
-    const result = reg.exec(pathStr.replace(/(\/|\\\\)$/, ""))
+    const index = pathStr.indexOf('?')
+    if (index > 0) pathStr = pathStr.substring(0, index)
+    const reg = /(\/|\\\\)([^(/|\\)]+)$/g
+    const result = reg.exec(pathStr.replace(/(\/|\\\\)$/, ''))
     if (!result) {
       return null
     }
@@ -89,7 +88,7 @@ const path = {
    * @returns {*}
    */
   dirname (pathStr: string): string {
-    return pathStr.replace(/((.*)(\/|\\|\\\\))?(.*?\..*$)?/, '$2');
+    return pathStr.replace(/((.*)(\/|\\|\\\\))?(.*?\..*$)?/, '$2')
   },
 
   /**
@@ -102,16 +101,16 @@ const path = {
    * @returns {string}
    */
   changeExtname (pathStr: string, extname: string): string {
-    extname = extname || "";
-    let index = pathStr.indexOf("?")
-    let tempStr = ""
+    extname = extname || ''
+    let index = pathStr.indexOf('?')
+    let tempStr = ''
     if (index > 0) {
-      tempStr = pathStr.substring(index);
-      pathStr = pathStr.substring(0, index);
+      tempStr = pathStr.substring(index)
+      pathStr = pathStr.substring(0, index)
     }
-    index = pathStr.lastIndexOf(".");
-    if (index < 0) return pathStr + extname + tempStr;
-    return pathStr.substring(0, index) + extname + tempStr;
+    index = pathStr.lastIndexOf('.')
+    if (index < 0) return pathStr + extname + tempStr
+    return pathStr.substring(0, index) + extname + tempStr
   },
   /**
    * Change file name of a file path.
@@ -127,18 +126,18 @@ const path = {
    * @returns {string}
    */
   changeBasename (pathStr: string, basename: string, isSameExt: boolean): string {
-    if (basename.indexOf(".") === 0) return this.changeExtname(pathStr, basename);
-    let index = pathStr.indexOf("?")
-    let tempStr = ""
-    const ext = isSameExt ? this.extname(pathStr) : ""
+    if (basename.indexOf('.') === 0) return this.changeExtname(pathStr, basename)
+    let index = pathStr.indexOf('?')
+    let tempStr = ''
+    const ext = isSameExt ? this.extname(pathStr) : ''
     if (index > 0) {
-      tempStr = pathStr.substring(index);
-      pathStr = pathStr.substring(0, index);
+      tempStr = pathStr.substring(index)
+      pathStr = pathStr.substring(0, index)
     }
-    index = pathStr.lastIndexOf("/");
-    index = index <= 0 ? 0 : index + 1;
-    return pathStr.substring(0, index) + basename + ext + tempStr;
+    index = pathStr.lastIndexOf('/')
+    index = index <= 0 ? 0 : index + 1
+    return pathStr.substring(0, index) + basename + ext + tempStr
   }
-};
+}
 
 export default path

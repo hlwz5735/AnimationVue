@@ -1,6 +1,6 @@
 <template>
   <div class="canvas-wrapper">
-    <canvas ref="canvasRef"/>
+    <canvas ref="canvasRef" />
   </div>
 </template>
 
@@ -17,7 +17,7 @@ interface ComponentData {
 const vm = Vue.extend({
   name: 'SpriteThumb',
   props: {
-    sprite: { type: Sprite },
+    sprite: { type: Sprite, default: () => null },
     width: {
       type: Number,
       default: 64
@@ -33,15 +33,6 @@ const vm = Vue.extend({
       ctx: null!
     }
   },
-  mounted(): void {
-    this.canvasRef = this.$refs.canvasRef as HTMLCanvasElement
-    this.ctx = this.canvasRef.getContext('2d')!
-
-    this.canvasRef.width = this.width
-    this.canvasRef.height = this.height
-
-    this.drawThumb()
-  },
   watch: {
     sprite(val: Sprite) {
       this.canvasRef.width = val.width
@@ -56,6 +47,15 @@ const vm = Vue.extend({
       this.canvasRef.height = val
       this.drawThumb()
     }
+  },
+  mounted(): void {
+    this.canvasRef = this.$refs.canvasRef as HTMLCanvasElement
+    this.ctx = this.canvasRef.getContext('2d')!
+
+    this.canvasRef.width = this.width
+    this.canvasRef.height = this.height
+
+    this.drawThumb()
   },
   methods: {
     drawThumb(): void {

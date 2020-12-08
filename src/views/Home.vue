@@ -1,16 +1,23 @@
 <template>
   <div>
-    <a-upload name="file" :multiple="true"
-        :before-upload="onFileSelected"
-        :custom-request="() => {}"
-        :show-upload-list="false">
+    <a-upload
+      name="file"
+      :multiple="true"
+      :before-upload="onFileSelected"
+      :custom-request="() => {}"
+      :show-upload-list="false"
+    >
       <a-button>
         <a-icon type="upload" />选择图片
       </a-button>
     </a-upload>
 
-    <div ref="container"></div>
-    <canvas ref="baseCanvas" width="800" height="800"></canvas>
+    <div ref="container" />
+    <canvas
+      ref="baseCanvas"
+      width="800"
+      height="800"
+    />
   </div>
 </template>
 

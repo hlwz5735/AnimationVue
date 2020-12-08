@@ -1,13 +1,20 @@
 <template>
   <div>
     <a-tabs @change="onTabChange">
-      <a-tab-pane key="sprite-set" tab="工作区">
+      <a-tab-pane
+        key="sprite-set"
+        tab="工作区"
+      >
         <workspace />
       </a-tab-pane>
-      <a-tab-pane key="lib-texture" tab="图集预览">
-        <texture-preview ref="libTexturePreview"
-                         :texture="libTexture"
-                         :default-background-color="libTexturePreviewBackgroundColor"
+      <a-tab-pane
+        key="lib-texture"
+        tab="图集预览"
+      >
+        <texture-preview
+          ref="libTexturePreview"
+          :texture="libTexture"
+          :default-background-color="libTexturePreviewBackgroundColor"
         />
       </a-tab-pane>
     </a-tabs>
@@ -33,7 +40,7 @@ interface ProvideType {
 }
 
 const vm = Vue.extend({
-  name: 'sprite-import-demo',
+  name: 'SpriteImportDemo',
   components: { TexturePreview, Workspace },
   data(): DataType {
     return {

@@ -1,6 +1,8 @@
 <template>
   <div style="margin: 10em;">
-    <router-link to="/sprite-import-demo">测试精灵图导入</router-link>
+    <router-link to="/sprite-import-demo">
+      测试精灵图导入
+    </router-link>
   </div>
 </template>
 
@@ -8,7 +10,7 @@
 import Vue from 'vue'
 
 const vm = Vue.extend({
-  name: 'index'
+  name: 'Index'
 })
 
 export default vm
