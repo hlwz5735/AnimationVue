@@ -5,7 +5,10 @@
         key="sprite-set"
         tab="工作区"
       >
-        <workspace />
+        <workspace
+          :lib-texture="libTexture"
+          :texture-packer="texturePacker"
+        />
       </a-tab-pane>
       <a-tab-pane
         key="lib-texture"
@@ -29,11 +32,13 @@ import TexturePreview from '@/components/texture-preview.vue'
 import Workspace from './components/workspace.vue'
 import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
+import TexturePacker from '@/gengine/textures/TexturePacker'
 
 interface DataType {
   /** 保存所有精灵用的库纹理 */
   libTexture: Texture,
-  libTexturePreviewBackgroundColor: Color
+  libTexturePreviewBackgroundColor: Color,
+  texturePacker: TexturePacker
 }
 
 interface ProvideType {
@@ -47,12 +52,14 @@ const vm = Vue.extend({
   data(): DataType {
     return {
       libTexture: null!,
-      libTexturePreviewBackgroundColor: Color.WHITE
+      libTexturePreviewBackgroundColor: Color.WHITE,
+      texturePacker: null!
     }
   },
 
   async created() {
-     this.libTexture = await Texture.createEmpty(1024, 1024, new Color(0, 0, 0, 0))
+    this.libTexture = await Texture.createEmpty(1024, 1024, new Color(0, 0, 0, 0))
+    this.texturePacker = new TexturePacker(this.libTexture)
   },
 
   provide(): ProvideType {

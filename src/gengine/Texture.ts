@@ -107,7 +107,6 @@ export default class Texture {
         const imageData = ctx.getImageData(clipRect.x, clipRect.y, w, h)
         newCanvas.width = w
         newCanvas.height = h
-        ctx.clearRect(0, 0, w, h)
         ctx.putImageData(imageData, 0, 0)
         bitmap.close()
       }
