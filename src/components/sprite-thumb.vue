@@ -13,10 +13,14 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 export default class SpriteThumb extends Vue {
   @Prop()
   private sprite!: Sprite
-  @Prop()
-  private width: number = 64
-  @Prop()
-  private height: number = 64
+  @Prop({
+    default: 64
+  })
+  private width!: number
+  @Prop({
+    default: 64
+  })
+  private height!: number
 
   canvasRef!: HTMLCanvasElement
   ctx!: CanvasRenderingContext2D
@@ -38,7 +42,7 @@ export default class SpriteThumb extends Vue {
 
     const destRect = centerRect(this.sprite.sourceRect, this.canvasRef.width, this.canvasRef.height)
 
-    this.ctx.drawImage(this.sprite.texture.bitmap, sx, sy, sw, sh,
+    this.ctx.drawImage(this.sprite.texture.getImageData(), sx, sy, sw, sh,
       destRect.minX, destRect.minY, destRect.width, destRect.height)
   }
 

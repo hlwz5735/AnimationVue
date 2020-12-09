@@ -27,7 +27,7 @@ export default class Sprite {
   }
 
   static async create(imagePath: string, width: number = 0, height: number = 0,
-                sourceRect?: Rect | boolean): Promise<Sprite> {
+                      sourceRect?: Rect | boolean): Promise<Sprite> {
     let texture: Texture = ImagePool.get(imagePath)!
     if (!texture) {
       try {
@@ -47,32 +47,33 @@ export default class Sprite {
         sprite.width = sprite.width ? sprite.width : sourceRect.width
         sprite.height = sprite.height ? sprite.height : sourceRect.height
       } else if (sourceRect === null || sourceRect === undefined) {
-        sprite.width = sprite.width ? sprite.width : texture.bitmap.width
-        sprite.height = sprite.height ? sprite.height : texture.bitmap.height
-        sprite.sourceRect.width = texture.bitmap.width
-        sprite.sourceRect.height = texture.bitmap.height
+        sprite.width = sprite.width || texture.width
+        sprite.height = sprite.height || texture.height
+        sprite.sourceRect.width = texture.width
+        sprite.sourceRect.height = texture.height
       } else if (sourceRect) {
         // 裁剪为true时
-        sprite.sourceRect = getClipRect(texture.bitmap)
-        sprite.width = sprite.width ? sprite.width : sprite.sourceRect.height
-        sprite.height = sprite.height ? sprite.height : sprite.sourceRect.height
+        sprite.sourceRect = getClipRect(texture.getCanvas())
+        sprite.width = sprite.width || sprite.sourceRect.height
+        sprite.height = sprite.height || sprite.sourceRect.height
       }
       return resolve(sprite)
     })
   }
 
-  static async createWithTexture(texture: Texture, width = 0, height = 0, sourceRect?: Rect): Promise<Sprite> {
+  static async createWithTexture(texture: Texture, width = 0, height = 0,
+                                 sourceRect?: Rect): Promise<Sprite> {
     return new Promise<Sprite>((resolve, reject) => {
       const sprite = new Sprite(texture, width, height)
       if (sourceRect === null || sourceRect === undefined) {
-        sprite.width = sprite.width ? sprite.width : texture.bitmap.width
-        sprite.height = sprite.height ? sprite.height : texture.bitmap.height
-        sprite.sourceRect.width = texture.bitmap.width
-        sprite.sourceRect.height = texture.bitmap.height
+        sprite.width = sprite.width || texture.width
+        sprite.height = sprite.height || texture.height
+        sprite.sourceRect.width = texture.width
+        sprite.sourceRect.height = texture.height
       } else {
         sprite.sourceRect = sourceRect
-        sprite.width = sprite.width ? sprite.width : sourceRect.width
-        sprite.height = sprite.height ? sprite.height : sourceRect.height
+        sprite.width = sprite.width || sourceRect.width
+        sprite.height = sprite.height || sourceRect.height
       }
       return resolve(sprite)
     })

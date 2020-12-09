@@ -38,15 +38,14 @@ export default class TexturePacker {
     this.rootRegion.area.height = texture.height
   }
 
-  async putSubTexture(texture: Texture): Promise<Rect> {
-    const region = this.findRegion(texture.width, texture.height, this.rootRegion)
+  async putSubTexture(newTexture: Texture): Promise<Rect> {
+    const region = this.findRegion(newTexture.width, newTexture.height, this.rootRegion)
     if (region) {
-      if (this.splitRegion(texture.width, texture.height, region) && this.texture) {
+      if (this.splitRegion(newTexture.width, newTexture.height, region) && this.texture) {
         const canvas = this.texture.getCanvas()
         const ctx = canvas.getContext('2d')!
-        ctx.drawImage(texture.bitmap, region.area.x, region.area.y)
-        await this.texture.updateBitmap()
-        return Rect.new(region.area.x, region.area.y, texture.width, texture.height)
+        ctx.drawImage(newTexture.getImageData(), region.area.x, region.area.y)
+        return Rect.new(region.area.x, region.area.y, newTexture.width, newTexture.height)
       }
     }
     throw new Error('查找精灵分区失败！')

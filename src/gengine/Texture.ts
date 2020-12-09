@@ -1,5 +1,6 @@
-import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
 import Color from '@/gengine/types/Color'
+import { getClipRect } from '@/gengine/utils/ImageClipUtil'
+import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
 
 enum LoadStatus {
   UNLOADED = 0,
@@ -7,10 +8,17 @@ enum LoadStatus {
   LOADED = 2
 }
 
+enum TextureType {
+  BITMAP,
+  CANVAS
+}
+
 export default class Texture {
-  public loadStatus: LoadStatus = LoadStatus.PENDING;
-  public bitmap: ImageBitmap = null!;
+  public loadStatus: LoadStatus = LoadStatus.PENDING
   public path: string = ''
+  public type = TextureType.BITMAP
+
+  public bitmap: ImageBitmap | null = null
   private canvas: HTMLCanvasElement | null = null
 
   isLoaded() {
@@ -18,30 +26,47 @@ export default class Texture {
   }
 
   getCanvas() {
-    if (!this.canvas) {
-      this.canvas = document.createElement('canvas')
-      this.canvas.width = this.width
-      this.canvas.height = this.height
+    if (this.type === TextureType.BITMAP) {
+      this.canvas = document.createElement('canvas')!
+      const imageBitmap = this.bitmap!
+      this.canvas!.width = imageBitmap.width
+      this.canvas!.height = imageBitmap.height
       const ctx = this.canvas.getContext('2d')
       if (ctx) {
-        ctx.drawImage(this.bitmap, 0, 0)
+        ctx.drawImage(imageBitmap, 0, 0)
       }
+      this.type = TextureType.CANVAS
+      imageBitmap.close()
     }
-    return this.canvas
+    return this.canvas!
   }
 
-  async updateBitmap() {
-    if (this.canvas) {
-      this.bitmap = await createImageBitmap(this.canvas)
+  /**
+   * 获取位图信息
+   * 返回值类型可能为 canvas 或 ImageBitmap
+   */
+  getImageData() {
+    if (this.type === TextureType.CANVAS) {
+      return this.canvas!
+    } else {
+      return this.bitmap!
     }
   }
 
   get width() {
-    return this.bitmap.width
+    if (this.type === TextureType.CANVAS) {
+      return this.canvas?.width || 0
+    } else {
+      return this.bitmap?.width || 0
+    }
   }
 
   get height() {
-    return this.bitmap.height
+    if (this.type === TextureType.CANVAS) {
+      return this.canvas?.height || 0
+    } else {
+      return this.bitmap?.height || 0
+    }
   }
 
   static async createEmpty(width: number = 32, height: number = 32, color: Color = Color.BLACK) {
@@ -64,23 +89,41 @@ export default class Texture {
 
   static async create(bitmap: ImageBitmap, filename: string,
                       isRemoveBackgroundColor = false, isClip = false): Promise<Texture> {
+    let newCanvas: HTMLCanvasElement | null = null
     if (isRemoveBackgroundColor) {
-      const result = await removeBackgroundColor(bitmap)
+      newCanvas = removeBackgroundColor(bitmap)
       bitmap.close()
-      bitmap = result
     }
     if (isClip) {
-      const result = await clipBitmap(bitmap)
-      bitmap.close()
-      bitmap = result
+      if (!newCanvas) {
+        newCanvas = clipBitmap(bitmap)
+      } else {
+        const clipRect = getClipRect(newCanvas)
+        const ctx = newCanvas.getContext('2d')!
+
+        const w = clipRect.width
+        const h = clipRect.height
+
+        const imageData = ctx.getImageData(clipRect.x, clipRect.y, w, h)
+        newCanvas.width = w
+        newCanvas.height = h
+        ctx.clearRect(0, 0, w, h)
+        ctx.putImageData(imageData, 0, 0)
+        bitmap.close()
+      }
     }
-    return new Promise<Texture>((resolve, reject) => {
-      const texture = new Texture()
-      texture.path = filename
+
+    const texture = new Texture()
+    texture.path = filename
+    if (newCanvas) {
+      texture.type = TextureType.CANVAS
+      texture.canvas = newCanvas
+    } else {
+      texture.type = TextureType.BITMAP
       texture.bitmap = bitmap
-      texture.loadStatus = LoadStatus.LOADED
-      return resolve(texture)
-    })
+    }
+    texture.loadStatus = LoadStatus.LOADED
+    return texture
   }
 
   static load(path: string): Promise<Texture> {

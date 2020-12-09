@@ -48,7 +48,7 @@ const vm = Vue.extend({
         return
       }
 
-      const { width, height } = this.texture.bitmap
+      const { width, height } = this.texture
 
       const canvas = this.$refs.libTextureCanvas as HTMLCanvasElement
       const ctx = canvas.getContext('2d')!
@@ -58,7 +58,7 @@ const vm = Vue.extend({
 
       ctx.fillStyle = this.previewBackgroundColor.toString()
       ctx.fillRect(0, 0, width, height)
-      ctx.drawImage(this.texture.bitmap, 0, 0)
+      ctx.drawImage(this.texture.getImageData(), 0, 0)
     }
   }
 })

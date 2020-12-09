@@ -1,7 +1,7 @@
 import Color from '@/gengine/types/Color'
 import { getClipRect } from '@/gengine/utils/ImageClipUtil'
 
-export async function removeBackgroundColor(bitmap: ImageBitmap, bgColor: Color | null = null): Promise<ImageBitmap> {
+export function removeBackgroundColor(bitmap: ImageBitmap, bgColor: Color | null = null): HTMLCanvasElement {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
   canvas.width = bitmap.width
@@ -30,7 +30,7 @@ export async function removeBackgroundColor(bitmap: ImageBitmap, bgColor: Color 
 
   ctx.putImageData(imageData, 0, 0)
 
-  return createImageBitmap(canvas)
+  return canvas
 }
 
 export function clipBitmap(bitmap: ImageBitmap) {
@@ -41,5 +41,5 @@ export function clipBitmap(bitmap: ImageBitmap) {
   canvas.height = clipRect.height
   ctx.drawImage(bitmap, clipRect.x, clipRect.y, clipRect.width, clipRect.height,
     0, 0, clipRect.width, clipRect.height)
-  return createImageBitmap(canvas)
+  return canvas
 }
