@@ -1,0 +1,23 @@
+{
+    "frames": {
+        "CycloneKick_01.png": {
+            "x": 0,
+            "y": 0,
+            "width": 39,
+            "height": 82,
+            "originalWidth": 72,
+            "originalHeight": 100,
+            "offsetX": -2.5,
+            "offsetY": 0,
+            "rotated": false
+        }
+    },
+    "metadata": {
+        "format": 0
+    },
+    "texture": {
+        "fileName": "xxx.png",
+        "width": 1024,
+        "height": 1024
+    }
+}
