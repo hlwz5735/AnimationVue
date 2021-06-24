@@ -39,6 +39,10 @@ export default class TexturePacker {
     this.rootRegion.area.height = texture.height
   }
 
+  /**
+   * 放入子纹理
+   * @param newTexture 纹理对象
+   */
   public putSubTexture(newTexture: Texture): Rect {
     const region = this.findRegion(newTexture.width, newTexture.height, this.rootRegion)
     if (region) {
@@ -52,6 +56,12 @@ export default class TexturePacker {
     throw new TextureFilledException('查找精灵分区失败！')
   }
 
+  /**
+   * 分割区块
+   * @param width
+   * @param height
+   * @param region
+   */
   public splitRegion(width: number, height: number, region: Region): Region {
     region.isEmpty = false
 
@@ -66,6 +76,10 @@ export default class TexturePacker {
     return region
   }
 
+  /**
+   * 大小调整
+   * @param factor 缩放因数
+   */
   public resize(factor: number) {
     const canvas = this.texture.getCanvas()
     const ctx = canvas.getContext('2d')!
@@ -122,13 +136,23 @@ export default class TexturePacker {
     return canvas
   }
 
+  /**
+   * 查找能放下指定尺寸图像的的区块，会递归调用
+   * @param width 图像宽度
+   * @param height 图像高度
+   * @param region 要查询的区块
+   * @private
+   */
   private findRegion(width: number, height: number, region: Region): Region | null {
+    // 如果当前区块本身已放入了图片，则先查找区块右方，再查找区块下方的区块
     if (!region.isEmpty) {
       return this.findRegion(width, height, region.rightRegion!) ||
         this.findRegion(width, height, region.bottomRegion!)
     } else if ((width <= region.area.width) && (height <= region.area.height)) {
+      // 如果当前区块为空且可以放下图片，则返回当前区块
       return region
     } else {
+      // 否则返回空（即本区块本身没有足够的空间）
       return null
     }
   }

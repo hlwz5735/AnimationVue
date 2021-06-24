@@ -32,7 +32,7 @@ import TexturePreview from '@/components/texture-preview.vue'
 import Workspace from './components/workspace.vue'
 import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
-import TexturePacker from '@/gengine/textures/TexturePacker'
+import TexturePacker from '@/gengine/utils/TexturePacker'
 
 interface DataType {
   /** 保存所有精灵用的库纹理 */

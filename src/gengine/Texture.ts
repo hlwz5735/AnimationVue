@@ -2,12 +2,24 @@ import Color from '@/gengine/types/Color'
 import { getClipRect } from '@/gengine/utils/ImageClipUtil'
 import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
 
+/**
+ * 加载状态
+ * UNLOADED - 未加载
+ * PENDING - 加载中
+ * LOADED - 加载完成
+ */
 enum LoadStatus {
   UNLOADED = 0,
   PENDING = 1,
   LOADED = 2
 }
 
+/**
+ * 纹理类型
+ * BITMAP - 以 ImageBitmap 作为纹理来源
+ * CANVAS - 以 HTMLCanvasElement 作为纹理来源（可编辑）
+ * 前者速度更快，后者可以对纹理进行编辑
+ */
 enum TextureType {
   BITMAP,
   CANVAS
@@ -80,6 +92,13 @@ export default class Texture {
     return Texture.create(await createImageBitmap(canvas), `native-${width}-${height}-${color.toString()}`)
   }
 
+  /**
+   * 从文件中创建
+   *
+   * @param file 用户选择的文件
+   * @param isRemoveBackgroundColor 是否移除背景颜色
+   * @param isClip 是否进行裁剪
+   */
   static async createFromFile(file: File, isRemoveBackgroundColor = false,
                               isClip = false): Promise<Texture> {
     // createImageBitmap方法可以直接从文件对象中生成 ImageBitmap
@@ -87,6 +106,14 @@ export default class Texture {
     return Texture.create(bitmap, file.name, isRemoveBackgroundColor, isClip)
   }
 
+  /**
+   * 从位图创建
+   *
+   * @param bitmap 位图对象
+   * @param filename 位图对应的文件名
+   * @param isRemoveBackgroundColor 是否移除背景颜色
+   * @param isClip 是否进行裁剪
+   */
   static async create(bitmap: ImageBitmap, filename: string,
                       isRemoveBackgroundColor = false, isClip = false): Promise<Texture> {
     let newCanvas: HTMLCanvasElement | null = null
@@ -125,6 +152,10 @@ export default class Texture {
     return texture
   }
 
+  /**
+   * 根据网络路径加载
+   * @param path 纹理所在的网络路径
+   */
   static load(path: string): Promise<Texture> {
     return new Promise<Texture>((resolve, reject) => {
       const image = new Image()
