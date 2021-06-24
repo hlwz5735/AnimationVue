@@ -1,5 +1,5 @@
 import Texture from '@/gengine/Texture'
-import ImagePool from '@/gengine/ImagePool'
+import TexturePool from '@/gengine/TexturePool'
 import Rect from '@/gengine/types/Rect'
 import Vec2 from '@/gengine/types/Vec2'
 import { getClipRect } from '@/gengine/utils/ImageClipUtil'
@@ -26,9 +26,18 @@ export default class Sprite {
     this.position = Vec2.new(0, 0)
   }
 
+  /**
+   * 直接通过图片路径创建精灵对象
+   *
+   * @param imagePath 图片路径
+   * @param width 图片宽度
+   * @param height 图片高度
+   * @param sourceRect 来源矩形框
+   */
   static async create(imagePath: string, width: number = 0, height: number = 0,
                       sourceRect?: Rect | boolean): Promise<Sprite> {
-    let texture: Texture = ImagePool.get(imagePath)!
+    // 先尝试从纹理池中获取纹理对象，如果找不到再加载之
+    let texture: Texture = TexturePool.get(imagePath)!
     if (!texture) {
       try {
         texture = await Texture.load(imagePath)
@@ -36,8 +45,9 @@ export default class Sprite {
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject('无法读取图片！path = ' + imagePath)
       }
-      ImagePool.set(imagePath, texture)
+      TexturePool.set(imagePath, texture)
     }
+
     return new Promise<Sprite>((resolve, reject) => {
       const sprite = new Sprite(texture, width, height)
       sprite.texture = texture
@@ -79,6 +89,11 @@ export default class Sprite {
     })
   }
 
+  /**
+   * 设置精灵的位置
+   * @param x x坐标
+   * @param y y坐标
+   */
   setPosition(x: number, y: number) {
     this.x = x
     this.y = y

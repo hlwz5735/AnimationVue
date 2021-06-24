@@ -1,0 +1,91 @@
+@startuml
+
+class Texture {
+  path: string
+  LoadStatus: number
+  type: number
+  - bitmap: ImageBitmap?
+  - canvas: HTMLCanvasElement?
+
+  .. getter ..
+  height(): number
+  width(): number
+
+  --
+  getCanvas(): HTMLCanvasElement
+  getImageData() : HTMLCanvasElement | ImageBitmap
+
+  {static} createEmpty(width = 32, height = 32, color = Color.BLACK): Texture
+  {static} createFromBitmap(bitmap: ImageBitmap, filename: string, isRemoveBackgroundColor = false, isClip = false): Texture
+  {static} createFromFile(file: File, isRemoveBackgroundColor = false, isClip = false): Texture
+  {static} createFromPath(path: string, isRemoveBackgroundColor = false, isClip = false): Texture
+}
+
+class TexturePool {
+  - innerPool: Map<string, Texture>
+
+  get(name: string): Texture
+  set(name: string, texture:Texture): void
+  setWithDefaultName(texture: Texture): void
+}
+
+TexturePool "1" o-- "n" Texture
+ 
+class SpriteFrame {
+  name: string
+  texture: Texture
+  sourceRect: Rect
+  originSize: Size
+  offset: Vec2
+  rotated: boolean
+
+' 从纹理池中根据名字创建
+  {static} createFromTexturePool(name: string, textureName: string, source: Rect, rotated: boolean?, originSize: Size?, offset: Vec2?): SpriteFrame
+' 从纹理池中根据名字创建
+  {static} createFromTexture(name: string, texture: Texture, source: Rect, rotated: boolean?, originSize: Size?, offset: Vec2?): SpriteFrame
+}
+
+SpriteFrame ---> Texture
+SpriteFrame ...> TexturePool
+
+class SpriteFramePool {
+- innerPool: Map<string, SpriteFrame>
+
+  get(name: string): SpriteFrame
+  set(name: string, spriteFrame: SpriteFrame): void
+  setWithDefaultName(spriteFrame: SpriteFrame): void
+}
+
+SpriteFramePool "1" o-- "n" SpriteFrame
+
+class Sprite {
+  - spriteFrame: SpriteFrame
+  - position: Vec2
+  - scale: Vec2
+  - angle: number = 0
+
+  setSpriteFrame(frame: SpriteFrame): void
+  setPosition(x: number, y: number): void
+  setPosition(pos: Vec2): void
+  setScale(factor: number): void
+  setScale(factors: Vec2): void
+  setScaleX(factor: number): void
+  setScaleY(factor: number): void
+  setAngle(angle: number): void
+  rotate(angle: number): void
+
+  getPosition(): Vec2
+  getScale(): Vec2
+  getScaleX(): number
+  getScaleY(): number
+  getAngle(): number
+
+  {static} createEmpty(): Sprite;
+  {static} createFromPath(path: string, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
+  {static} createFromFile(file: File, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
+}
+
+Sprite ---> SpriteFrame
+Sprite ...> SpriteFramePool
+
+@enduml
