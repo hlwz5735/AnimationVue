@@ -13,10 +13,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 export default class SpriteFrameThumb extends Vue {
   @Prop()
   private spriteFrame!: SpriteFrame
+
   @Prop({
     default: 64
   })
   private width!: number
+
   @Prop({
     default: 64
   })

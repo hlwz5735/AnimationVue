@@ -194,7 +194,7 @@ export default class Sprite {
 
   static createFromTexturePool(textureName: string, source: Rect | null = null, rotated = false,
                                originSize: Size | null = null, offset: Vec2 | null = null): Sprite {
-    let texture: Texture = TexturePool.get(textureName)!
+    const texture: Texture = TexturePool.get(textureName)!
     if (!texture) {
       throw new Error(`找不到名字为'${textureName}'的纹理。`)
     }

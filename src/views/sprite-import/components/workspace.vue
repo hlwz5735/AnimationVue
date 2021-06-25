@@ -31,10 +31,9 @@
 <script lang="ts">
 import Sprite from '@/gengine/Sprite'
 import Texture from '@/gengine/Texture'
-import { Component, Inject, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import SpriteThumb from '@/components/sprite-frame-thumb.vue'
 import TexturePacker from '@/gengine/utils/TexturePacker'
-import Rect from '@/gengine/types/Rect'
 import TextureFilledException from '@/gengine/exceptions/TextureFilledException'
 
 @Component({

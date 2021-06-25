@@ -167,10 +167,10 @@ export default class Color {
    * @static
    */
   static fromHex (out: Color, hex: number): Color {
-    let r = ((hex >> 24)) / 255.0
-    let g = ((hex >> 16) & 0xff) / 255.0
-    let b = ((hex >> 8) & 0xff) / 255.0
-    let a = ((hex) & 0xff) / 255.0
+    const r = ((hex >> 24)) / 255.0
+    const g = ((hex >> 16) & 0xff) / 255.0
+    const b = ((hex >> 8) & 0xff) / 255.0
+    const a = ((hex) & 0xff) / 255.0
 
     out.r = r
     out.g = g
@@ -262,10 +262,10 @@ export default class Color {
    * @static
    */
   static lerp (out: Color, a: Color, b: Color, t: number): Color {
-    let ar = a.r
-    let ag = a.g
-    let ab = a.b
-    let aa = a.a
+    const ar = a.r
+    const ag = a.g
+    const ab = a.b
+    const aa = a.a
     out.r = ar + t * (b.r - ar)
     out.g = ag + t * (b.g - ag)
     out.b = ab + t * (b.b - ab)
@@ -408,6 +408,7 @@ export default class Color {
   get r (): number {
     return this.getR()
   }
+
   set r (v: number) {
     this.setR(v)
   }
@@ -420,6 +421,7 @@ export default class Color {
   get g (): number {
     return this.getG()
   }
+
   set g (v: number) {
     this.setG(v)
   }
@@ -432,6 +434,7 @@ export default class Color {
   get b (): number {
     return this.getB()
   }
+
   set b (v: number) {
     this.setB(v)
   }
@@ -444,6 +447,7 @@ export default class Color {
   get a (): number {
     return this.getA()
   }
+
   set a (v: number) {
     this.setA(v)
   }
@@ -457,6 +461,7 @@ export default class Color {
   getR (): number {
     return this._val & 0x000000ff
   }
+
   /**
    * !#en Sets red value and return the current color object
    * !#zh 设置当前的红色值，并返回当前对象。
@@ -472,6 +477,7 @@ export default class Color {
     this._val = ((this._val & 0xffffff00) | red) >>> 0
     return this
   }
+
   /**
    * !#en Gets green channel value
    * !#zh 获取当前颜色的绿色值。
@@ -481,6 +487,7 @@ export default class Color {
   getG (): number {
     return (this._val & 0x0000ff00) >> 8
   }
+
   /**
    * !#en Sets green value and return the current color object
    * !#zh 设置当前的绿色值，并返回当前对象。
@@ -496,6 +503,7 @@ export default class Color {
     this._val = ((this._val & 0xffff00ff) | (green << 8)) >>> 0
     return this
   }
+
   /**
    * !#en Gets blue channel value
    * !#zh 获取当前颜色的蓝色值。
@@ -505,6 +513,7 @@ export default class Color {
   getB (): number {
     return (this._val & 0x00ff0000) >> 16
   }
+
   /**
    * !#en Sets blue value and return the current color object
    * !#zh 设置当前的蓝色值，并返回当前对象。
@@ -520,6 +529,7 @@ export default class Color {
     this._val = ((this._val & 0xff00ffff) | (blue << 16)) >>> 0
     return this
   }
+
   /**
    * !#en Gets alpha channel value
    * !#zh 获取当前颜色的透明度值。
@@ -529,6 +539,7 @@ export default class Color {
   getA (): number {
     return (this._val & 0xff000000) >>> 24
   }
+
   /**
    * !#en Sets alpha value and return the current color object
    * !#zh 设置当前的透明度，并返回当前对象。
@@ -589,10 +600,10 @@ export default class Color {
    */
   fromHEX (hexString: string): this {
     hexString = (hexString.indexOf('#') === 0) ? hexString.substring(1) : hexString
-    let r = parseInt(hexString.substr(0, 2), 16) || 0
-    let g = parseInt(hexString.substr(2, 2), 16) || 0
-    let b = parseInt(hexString.substr(4, 2), 16) || 0
-    let a = parseInt(hexString.substr(6, 2), 16) || 255
+    const r = parseInt(hexString.substr(0, 2), 16) || 0
+    const g = parseInt(hexString.substr(2, 2), 16) || 0
+    const b = parseInt(hexString.substr(4, 2), 16) || 0
+    const a = parseInt(hexString.substr(6, 2), 16) || 255
     this._val = ((a << 24) >>> 0) + (b << 16) + (g << 8) + r
     return this
   }
@@ -611,7 +622,7 @@ export default class Color {
   toHEX (fmt: string): string {
     const prefix = '0'
     // #rrggbb
-    let hex = [
+    const hex = [
       (this.r < 16 ? prefix : '') + (this.r).toString(16),
       (this.g < 16 ? prefix : '') + (this.g).toString(16),
       (this.b < 16 ? prefix : '') + (this.b).toString(16)
@@ -777,10 +788,10 @@ export default class Color {
    * @param {Color} other
    */
   multiply (other: Color) {
-    let r = ((this._val & 0x000000ff) * other.r) >> 8
-    let g = ((this._val & 0x0000ff00) * other.g) >> 8
-    let b = ((this._val & 0x00ff0000) * other.b) >> 8
-    let a = ((this._val & 0xff000000) >>> 8) * other.a
+    const r = ((this._val & 0x000000ff) * other.r) >> 8
+    const g = ((this._val & 0x0000ff00) * other.g) >> 8
+    const b = ((this._val & 0x00ff0000) * other.b) >> 8
+    const a = ((this._val & 0xff000000) >>> 8) * other.a
     this._val = (a & 0xff000000) | (b & 0x00ff0000) | (g & 0x0000ff00) | (r & 0x000000ff)
     return this
   }
