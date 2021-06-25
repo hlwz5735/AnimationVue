@@ -20,7 +20,7 @@
     <div>
       <sprite-thumb
         v-if="tempSprite"
-        :sprite="tempSprite"
+        :sprite-frame="tempSprite.spriteFrame"
         :width="tempSprite.width"
         :height="tempSprite.height"
       />
@@ -32,7 +32,7 @@
 import Sprite from '@/gengine/Sprite'
 import Texture from '@/gengine/Texture'
 import { Component, Inject, Prop, Vue } from 'vue-property-decorator'
-import SpriteThumb from '@/components/sprite-thumb.vue'
+import SpriteThumb from '@/components/sprite-frame-thumb.vue'
 import TexturePacker from '@/gengine/utils/TexturePacker'
 import Rect from '@/gengine/types/Rect'
 import TextureFilledException from '@/gengine/exceptions/TextureFilledException'
@@ -42,13 +42,11 @@ import TextureFilledException from '@/gengine/exceptions/TextureFilledException'
 })
 export default class Workspace extends Vue {
   @Prop({
-    type: Texture,
     required: true
   })
   private libTexture!: Texture | null
 
   @Prop({
-    type: TexturePacker,
     required: true
   })
   private texturePacker!: TexturePacker | null
@@ -63,7 +61,7 @@ export default class Workspace extends Vue {
    */
   async onFileSelected (file: File, fileList: Array<File>) {
     // 读取选择的文件列表，创建纹理
-    const texture = await Texture.createFromFile(file, true, true)
+    const texture = await Texture.createByFile(file, true, true)
     // 将纹理加入到待处理纹理列表中
     this.textureList.push(texture)
     // 如果待处理纹理列表的长度和文件列表相等（即所有文件都作为文件处理了）
@@ -77,13 +75,13 @@ export default class Workspace extends Vue {
         for (const elem of this.textureList) {
           try {
             const sourceRect = this.texturePacker.putSubTexture(elem)
-            this.tempSprite = await Sprite.createWithTexture(this.libTexture!, 0, 0, sourceRect)
+            this.tempSprite = await Sprite.createByTexture(this.libTexture!, sourceRect)
           } catch (ex) {
             if (ex instanceof TextureFilledException) {
               console.log(file.name + '超限，开始扩大纹理大小')
               this.texturePacker.resize(2)
               const sourceRect = this.texturePacker.putSubTexture(elem)
-              this.tempSprite = await Sprite.createWithTexture(this.libTexture!, 0, 0, sourceRect)
+              this.tempSprite = await Sprite.createByTexture(this.libTexture!, sourceRect)
             }
           }
         }

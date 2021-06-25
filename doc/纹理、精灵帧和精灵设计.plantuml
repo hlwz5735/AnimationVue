@@ -2,8 +2,8 @@
 
 class Texture {
   path: string
-  LoadStatus: number
-  type: number
+  loadStatus: LoadStatus
+  type: TextureType
   - bitmap: ImageBitmap?
   - canvas: HTMLCanvasElement?
 
@@ -16,9 +16,9 @@ class Texture {
   getImageData() : HTMLCanvasElement | ImageBitmap
 
   {static} createEmpty(width = 32, height = 32, color = Color.BLACK): Texture
-  {static} createFromBitmap(bitmap: ImageBitmap, filename: string, isRemoveBackgroundColor = false, isClip = false): Texture
-  {static} createFromFile(file: File, isRemoveBackgroundColor = false, isClip = false): Texture
-  {static} createFromPath(path: string, isRemoveBackgroundColor = false, isClip = false): Texture
+  {static} createByBitmap(bitmap: ImageBitmap, filename: string, isRemoveBackgroundColor = false, isClip = false): Texture
+  {static} createByFile(file: File, isRemoveBackgroundColor = false, isClip = false): Texture
+  {static} createByPath(path: string, isRemoveBackgroundColor = false, isClip = false): Texture
 }
 
 class TexturePool {
@@ -27,10 +27,11 @@ class TexturePool {
   get(name: string): Texture
   set(name: string, texture:Texture): void
   setWithDefaultName(texture: Texture): void
+  remove(name: string): Texture
 }
 
 TexturePool "1" o-- "n" Texture
- 
+
 class SpriteFrame {
   name: string
   texture: Texture
@@ -40,9 +41,9 @@ class SpriteFrame {
   rotated: boolean
 
 ' 从纹理池中根据名字创建
-  {static} createFromTexturePool(name: string, textureName: string, source: Rect, rotated: boolean?, originSize: Size?, offset: Vec2?): SpriteFrame
+  {static} createFromTexturePool(name: string, textureName: string, source: Rect, rotated = false, originSize: Size?, offset: Vec2?): SpriteFrame
 ' 从纹理池中根据名字创建
-  {static} createFromTexture(name: string, texture: Texture, source: Rect, rotated: boolean?, originSize: Size?, offset: Vec2?): SpriteFrame
+  {static} createByTexture(name: string, texture: Texture, source: Rect, rotated = false, originSize: Size?, offset: Vec2?): SpriteFrame
 }
 
 SpriteFrame ---> Texture
@@ -54,6 +55,7 @@ class SpriteFramePool {
   get(name: string): SpriteFrame
   set(name: string, spriteFrame: SpriteFrame): void
   setWithDefaultName(spriteFrame: SpriteFrame): void
+  remove(name: string): SpriteFrame
 }
 
 SpriteFramePool "1" o-- "n" SpriteFrame
@@ -63,26 +65,38 @@ class Sprite {
   - position: Vec2
   - scale: Vec2
   - angle: number = 0
+  - anchor: Vec2
+  - visible: boolean
 
-  setSpriteFrame(frame: SpriteFrame): void
+  --
   setPosition(x: number, y: number): void
-  setPosition(pos: Vec2): void
   setScale(factor: number): void
-  setScale(factors: Vec2): void
-  setScaleX(factor: number): void
-  setScaleY(factor: number): void
-  setAngle(angle: number): void
   rotate(angle: number): void
+  moveBy(pos: Vec2): void
+  scaleBy(factor: number): void
+  scaleBy(factorX: number, factorY: number): void
 
-  getPosition(): Vec2
-  getScale(): Vec2
-  getScaleX(): number
-  getScaleY(): number
-  getAngle(): number
+  .. getter/setter ..
+  spriteFrame(): SpriteFrame
+  position(): Vec2
+  scale(): Vec2
+  scaleX(): number
+  scaleY(): number
+  angle(): number
+  anchor(): Vec2
+  visible(): void
 
+  --
   {static} createEmpty(): Sprite;
-  {static} createFromPath(path: string, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
-  {static} createFromFile(file: File, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
+  ' 根据路径或用户文件创建精灵，纹理入池，精灵帧不入池
+  {static} createByPath(path: string, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
+  {static} createByFile(file: File, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite
+  ' 直接根据纹理创建精灵，精灵帧不入池
+  {static} createByTexture(texture: Texture, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite;
+  {static} createFromTexturePool(textureName: Texture, source: Rect?, rotated: boolean?, originSize: Size?, offset: Vec2?): Sprite;
+  ' 根据精灵帧创建精灵
+  {static} createBySpriteFrame(spriteFrame: SpriteFrame): Sprite;
+  {static} createFromSpriteFramePool(spriteFrameName: string): Sprite;
 }
 
 Sprite ---> SpriteFrame

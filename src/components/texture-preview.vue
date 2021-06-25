@@ -58,7 +58,10 @@ const vm = Vue.extend({
 
       ctx.fillStyle = this.previewBackgroundColor.toString()
       ctx.fillRect(0, 0, width, height)
-      ctx.drawImage(this.texture.getImageData(), 0, 0)
+      const imageData = this.texture.getImageData()!
+      if (imageData) {
+        ctx.drawImage(imageData, 0, 0)
+      }
     }
   }
 })

@@ -5,14 +5,14 @@
 </template>
 
 <script lang="ts">
-import Sprite from '@/gengine/Sprite'
+import SpriteFrame from '@/gengine/SpriteFrame'
 import Rect from '@/gengine/types/Rect'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
-export default class SpriteThumb extends Vue {
+export default class SpriteFrameThumb extends Vue {
   @Prop()
-  private sprite!: Sprite
+  private spriteFrame!: SpriteFrame
   @Prop({
     default: 64
   })
@@ -38,16 +38,19 @@ export default class SpriteThumb extends Vue {
   drawThumb(): void {
     this.ctx.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height)
 
-    const { minX: sx, minY: sy, width: sw, height: sh } = this.sprite.sourceRect
+    const { minX: sx, minY: sy, width: sw, height: sh } = this.spriteFrame.sourceRect
 
-    const destRect = centerRect(this.sprite.sourceRect, this.canvasRef.width, this.canvasRef.height)
+    const destRect = centerRect(this.spriteFrame.sourceRect, this.canvasRef.width, this.canvasRef.height)
 
-    this.ctx.drawImage(this.sprite.texture.getImageData(), sx, sy, sw, sh,
-      destRect.minX, destRect.minY, destRect.width, destRect.height)
+    const imageData = this.spriteFrame.texture.getImageData()!
+    if (imageData) {
+      this.ctx.drawImage(imageData, sx, sy, sw, sh,
+        destRect.minX, destRect.minY, destRect.width, destRect.height)
+    }
   }
 
-  @Watch('sprite')
-  onSpriteChange(val: Sprite) {
+  @Watch('spriteFrame')
+  onSpriteChange(val: SpriteFrame) {
     this.drawThumb()
   }
 

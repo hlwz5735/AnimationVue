@@ -9,9 +9,7 @@ export default class Vec2 {
   }
 
   static new(other: Vec2): Vec2
-  // eslint-disable-next-line no-dupe-class-members
   static new(x: number, y: number): Vec2
-  // eslint-disable-next-line no-dupe-class-members
   static new(): Vec2 {
     if (arguments.length === 0) {
       return Vec2.ZERO()

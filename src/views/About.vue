@@ -31,7 +31,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import SpriteThumb from '@/components/sprite-thumb.vue'
+import SpriteThumb from '@/components/sprite-frame-thumb.vue'
 import Sprite from '@/gengine/Sprite'
 import Texture from '@/gengine/Texture'
 
@@ -55,16 +55,8 @@ export default class About extends Vue {
   }
 
   async onFileSelected(file: File, fileList: Array<File>) {
-    // for (file of fileList) {
-    // const reader = new FileReader()
-    // reader.readAsDataURL(file)
-    // reader.onloadend = async () => {
-    //   // const sprite = await Sprite.create(reader.result as string, 0, 0)
-    //   const sprite = await Sprite.create(reader.result as string, 0, 0, true)
-    //   this.sprites.push(sprite)
-    // }
-    const texture = await Texture.createFromFile(file, true, true)
-    const sprite = await Sprite.createWithTexture(texture, 0, 0)
+    const texture = await Texture.createByFile(file, true, true)
+    const sprite = await Sprite.createByTexture(texture)
     this.sprites.push(sprite)
   }
   // }

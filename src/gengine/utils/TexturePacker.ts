@@ -49,7 +49,8 @@ export default class TexturePacker {
       if (this.splitRegion(newTexture.width, newTexture.height, region) && this.texture) {
         const canvas = this.texture.getCanvas()
         const ctx = canvas.getContext('2d')!
-        ctx.drawImage(newTexture.getImageData(), region.area.x, region.area.y)
+        const imageData = newTexture.getImageData()!
+        ctx.drawImage(imageData, region.area.x, region.area.y)
         return Rect.new(region.area.x, region.area.y, newTexture.width, newTexture.height)
       }
     }
