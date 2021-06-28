@@ -23,6 +23,17 @@ export class TexturePool {
   setWithDefaultName(texture: Texture): void {
     this.innerPool.set(texture.path, texture)
   }
+
+  /**
+   * 列举所有纹理名组成的数组（按字母表排序）
+   */
+  keys() {
+    const res = [] as Array<string>
+    for (const key of this.innerPool.keys()) {
+      res.push(key)
+    }
+    return res.sort()
+  }
 }
 
 const instance = new TexturePool()

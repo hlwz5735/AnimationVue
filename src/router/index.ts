@@ -7,7 +7,19 @@ const routes = [
   {
     path: '/',
     name: '主框架',
-    component: () => import(/* webpackChunkName: "main" */ '@/views/index.vue')
+    component: () => import(/* webpackChunkName: "main" */ '@/views/index.vue'),
+    children: [
+      {
+        path: '/animation-list',
+        name: '动画列表页',
+        component: () => import(/* webpackChunkName: "main" */ '@/views/animation-list/index.vue')
+      },
+      {
+        path: '/texture-list',
+        name: '纹理列表页',
+        component: () => import(/* webpackChunkName: "main" */ '@/views/texture-list/index.vue')
+      }
+    ]
   },
   {
     path: '/sprite-import-demo',

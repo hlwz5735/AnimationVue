@@ -20,7 +20,7 @@ import Vue from 'vue'
 import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
 import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 
 /**
  * 用于大纹理预览的组件，自带一个颜色选择器
@@ -31,29 +31,34 @@ import { Prop } from 'vue-property-decorator'
 export default class TexturePreview extends Vue {
   @Prop({
     type: Texture,
-    required: true
+    required: false
   })
-  private texture!: Texture
+  private texture!: Texture | null
 
   @Prop({
     type: Boolean,
     default: true
   })
-  private showColorSelector = true
+  private showColorSelector!: boolean
 
   @Prop({
     type: Color,
-    default: Color.WHITE
+    default: () => Color.WHITE
   })
-  private defaultBackgroundColor = Color.WHITE
+  private defaultBackgroundColor!: Color
 
-  public previewBackgroundColor = this.defaultBackgroundColor
+  public previewBackgroundColor!: Color
 
   created() {
     this.previewBackgroundColor = this.defaultBackgroundColor
   }
 
   mounted() {
+    this.drawLibTexture()
+  }
+
+  @Watch('texture')
+  onTextureChange() {
     this.drawLibTexture()
   }
 

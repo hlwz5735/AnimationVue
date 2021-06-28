@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import TexturePreview from '@/components/texture-preview.vue'
-import Workspace from './components/workspace.vue'
+import Workspace from './workspace.vue'
 import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
 import TexturePacker from '@/gengine/utils/TexturePacker'
