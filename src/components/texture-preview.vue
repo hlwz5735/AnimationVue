@@ -19,54 +19,65 @@
 import Vue from 'vue'
 import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
-
-interface DataType {
-  previewBackgroundColor: Color;
-}
+import Component from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
 
 /**
  * 用于大纹理预览的组件，自带一个颜色选择器
  */
-const vm = Vue.extend({
-  name: 'TexturePreview',
-  props: {
-    texture: { type: Texture, required: true },
-    showColorSelector: { type: Boolean, default: true },
-    defaultBackgroundColor: { type: Color, default: Color.WHITE }
-  },
-  data(): DataType {
-    return {
-      previewBackgroundColor: this.defaultBackgroundColor
-    }
-  },
+@Component({
+  name: 'texture-preview'
+})
+export default class TexturePreview extends Vue {
+  @Prop({
+    type: Texture,
+    required: true
+  })
+  private texture!: Texture
+
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  private showColorSelector = true
+
+  @Prop({
+    type: Color,
+    default: Color.WHITE
+  })
+  private defaultBackgroundColor = Color.WHITE
+
+  public previewBackgroundColor = this.defaultBackgroundColor
+
+  created() {
+    this.previewBackgroundColor = this.defaultBackgroundColor
+  }
+
   mounted() {
     this.drawLibTexture()
-  },
-  methods: {
-    drawLibTexture() {
-      if (!this.texture) {
-        return
-      }
+  }
 
-      const { width, height } = this.texture
+  drawLibTexture() {
+    if (!this.texture) {
+      return
+    }
 
-      const canvas = this.$refs.libTextureCanvas as HTMLCanvasElement
-      const ctx = canvas.getContext('2d')!
+    const { width, height } = this.texture
 
-      canvas.width = width
-      canvas.height = height
+    const canvas = this.$refs.libTextureCanvas as HTMLCanvasElement
+    const ctx = canvas.getContext('2d')!
 
-      ctx.fillStyle = this.previewBackgroundColor.toString()
-      ctx.fillRect(0, 0, width, height)
-      const imageData = this.texture.getImageData()!
-      if (imageData) {
-        ctx.drawImage(imageData, 0, 0)
-      }
+    canvas.width = width
+    canvas.height = height
+
+    ctx.fillStyle = this.previewBackgroundColor.toString()
+    ctx.fillRect(0, 0, width, height)
+    const imageData = this.texture.getImageData()!
+    if (imageData) {
+      ctx.drawImage(imageData, 0, 0)
     }
   }
-})
-
-export default vm
+}
 </script>
 
 <style lang="less" scoped>

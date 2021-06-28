@@ -36,14 +36,14 @@ import TexturePacker from '@/gengine/utils/TexturePacker'
 
 interface DataType {
   /** 保存所有精灵用的库纹理 */
-  libTexture: Texture,
-  libTexturePreviewBackgroundColor: Color,
-  texturePacker: TexturePacker
+  libTexture: Texture;
+  libTexturePreviewBackgroundColor: Color;
+  texturePacker: TexturePacker;
 }
 
 interface ProvideType {
   /** 获取库纹理 */
-  getLibTexture: () => Texture
+  getLibTexture: () => Texture;
 }
 
 const vm = Vue.extend({
@@ -73,7 +73,7 @@ const vm = Vue.extend({
       switch (key) {
         case 'lib-texture':
           if (this.$refs.libTexturePreview) {
-            (this.$refs.libTexturePreview as any).drawLibTexture()
+            (this.$refs.libTexturePreview as TexturePreview).drawLibTexture()
           }
           break
         case 'sprite-set':

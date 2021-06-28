@@ -39,16 +39,15 @@ export default class SpriteFrameThumb extends Vue {
 
   drawThumb(): void {
     this.ctx.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height)
-
-    const { minX: sx, minY: sy, width: sw, height: sh } = this.spriteFrame.sourceRect
-
-    const destRect = centerRect(this.spriteFrame.sourceRect, this.canvasRef.width, this.canvasRef.height)
-
-    const imageData = this.spriteFrame.texture.getImageData()!
-    if (imageData) {
-      this.ctx.drawImage(imageData, sx, sy, sw, sh,
-        destRect.minX, destRect.minY, destRect.width, destRect.height)
+    const imageData = this.spriteFrame.texture.getImageData()
+    if (!imageData) {
+      return
     }
+    // 计算原图片缩放到缩略图大小所使用的包围框
+    const destRect = centerRect(this.spriteFrame.sourceRect, this.canvasRef.width, this.canvasRef.height)
+    const { minX: sx, minY: sy, width: sw, height: sh } = this.spriteFrame.sourceRect
+    this.ctx.drawImage(imageData, sx, sy, sw, sh,
+      destRect.minX, destRect.minY, destRect.width, destRect.height)
   }
 
   @Watch('spriteFrame')
