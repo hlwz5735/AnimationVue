@@ -1,5 +1,7 @@
+// 位图操作工具，提供对位图的裁切和背景颜色移除等功能
+
 import Color from '@/gengine/types/Color'
-import { getClipRect } from '@/gengine/utils/ImageClipUtil'
+import { getClipRect } from '@/gengine/utils/ImageUtil'
 
 export function removeBackgroundColor(bitmap: ImageBitmap, bgColor: Color | null = null): HTMLCanvasElement {
   const canvas = document.createElement('canvas')

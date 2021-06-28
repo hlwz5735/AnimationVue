@@ -1,5 +1,5 @@
 import Color from '@/gengine/types/Color'
-import { getClipRect } from '@/gengine/utils/ImageClipUtil'
+import { getClipRect } from '@/gengine/utils/ImageUtil'
 import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
 
 /**
@@ -26,7 +26,7 @@ enum TextureType {
 }
 
 export default class Texture {
-  public path: string = ''
+  public path = ''
   public loadStatus: LoadStatus = LoadStatus.PENDING
   public type = TextureType.BITMAP
 

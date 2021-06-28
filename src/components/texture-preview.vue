@@ -21,7 +21,7 @@ import Texture from '@/gengine/Texture'
 import Color from '@/gengine/types/Color'
 
 interface DataType {
-  previewBackgroundColor: Color
+  previewBackgroundColor: Color;
 }
 
 /**

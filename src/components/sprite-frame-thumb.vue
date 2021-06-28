@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import SpriteFrame from '@/gengine/SpriteFrame'
-import Rect from '@/gengine/types/Rect'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import SpriteFrame from '@/gengine/SpriteFrame'
+import { centerRect } from '@/gengine/utils/ImageUtil'
 
 @Component
 export default class SpriteFrameThumb extends Vue {
@@ -52,7 +52,7 @@ export default class SpriteFrameThumb extends Vue {
   }
 
   @Watch('spriteFrame')
-  onSpriteChange(val: SpriteFrame) {
+  onSpriteChange() {
     this.drawThumb()
   }
 
@@ -66,40 +66,6 @@ export default class SpriteFrameThumb extends Vue {
   onHeightChange(val: number) {
     this.canvasRef.height = val
     this.drawThumb()
-  }
-}
-
-/**
- * 计算该图像的纹理在目标canvas中的自适应位置
- *
- * @param sourceRect 源纹理的位置矩形
- * @param destWidth 目标宽度
- * @param destHeight 目标高度
- */
-function centerRect(sourceRect: Rect, destWidth: number, destHeight: number): Rect {
-  if (sourceRect.width <= destWidth && sourceRect.height <= destHeight) {
-    return Rect.new((destWidth - sourceRect.width) / 2, (destHeight - sourceRect.height) / 2,
-      sourceRect.width, sourceRect.height)
-  } else {
-    const widthRatio = destWidth / sourceRect.width
-    const heightRatio = destHeight / sourceRect.height
-
-    // 宽大于高，x顶格，y下移居中，宽填满，高按比例缩小
-    if (widthRatio < heightRatio) {
-      const x = 0
-      const width = destWidth
-      const height = Math.ceil(sourceRect.height * widthRatio)
-      const y = (destHeight - height) / 2
-
-      return Rect.new(x, y, width, height)
-    } else {
-      const y = 0
-      const width = Math.ceil(sourceRect.width * heightRatio)
-      const height = destHeight
-      const x = (destWidth - width) / 2
-
-      return Rect.new(x, y, width, height)
-    }
   }
 }
 </script>

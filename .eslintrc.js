@@ -6,7 +6,7 @@ module.exports = {
   'extends': [
     'plugin:vue/recommended',
     '@vue/standard',
-    '@vue/typescript'
+    '@vue/typescript/recommended'
   ],
   rules: {
     indent: ['off'],
@@ -14,10 +14,11 @@ module.exports = {
     'no-dupe-class-members': ['off'],
     'space-before-function-paren': ['off', 'never'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    '@typescript-eslint/no-non-null-assertion': ['off']
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    ecmaVersion: 12,
+    ecmaVersion: 2020,
   }
 }
