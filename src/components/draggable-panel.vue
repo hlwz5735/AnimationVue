@@ -38,7 +38,7 @@ type PanelSizingDest = ('main' | 'second')
 })
 export default class DraggablePanel extends Vue {
   @Prop({
-    default: 'vertical'
+    default: 'horizontal'
   })
   private direction!: PanelDirection
 
@@ -107,8 +107,9 @@ export default class DraggablePanel extends Vue {
 
   get mainContainerStyleObject() {
     const styleObj = {
-      flexBasis: 'auto',
-      flexGrow: '1'
+      flexGrow: '1',
+      flexShrink: '1',
+      flexBasis: 'auto'
     }
 
     if (this.sizingDest === 'main') {
@@ -121,8 +122,9 @@ export default class DraggablePanel extends Vue {
 
   get secondContainerStyleObject() {
     const styleObj = {
-      flexBasis: 'auto',
-      flexGrow: '1'
+      flexGrow: '1',
+      flexShrink: '1',
+      flexBasis: 'auto'
     }
 
     if (this.sizingDest === 'second') {
@@ -140,6 +142,7 @@ export default class DraggablePanel extends Vue {
   display: flex;
 
   .draggable-panel-main {
+    width: 0;
   }
   .draggable-panel-second {
     position: relative;

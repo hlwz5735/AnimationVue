@@ -1,9 +1,9 @@
 <template>
-  <a-layout style="height: calc(100vh - 64px)">
-    <a-layout-sider
-      theme="light"
-      style="height: 100%; overflow: auto"
-    >
+  <draggable-panel
+    style="height: calc(100vh - 64px)"
+    :default-sizing="300"
+  >
+    <div style="height: 100%; overflow: auto">
       <a-menu
         v-model="currentTextureNames"
       >
@@ -14,42 +14,35 @@
           {{ textureName }}
         </a-menu-item>
       </a-menu>
-    </a-layout-sider>
+    </div>
 
-    <a-layout-content style="overflow-x: auto">
+    <draggable-panel
+      slot="second"
+      sizing-dest="second"
+      :default-sizing="300"
+      style="height: 100%"
+    >
       <texture-preview
+        style="overflow: auto; height: 100%"
         :show-color-selector="false"
         :texture="getCurrentTexture()"
       />
-    </a-layout-content>
-
-    <a-layout-sider
-      collapsible
-      style="height: 100%; overflow: auto; position: relative; transition: none"
-      theme="light"
-      :width="rightPanelProps.width"
-      :collapsed="rightPanelProps.collapsed"
-      :collapsed-width="0"
-      :trigger="null"
-    >
-      <div
-        class="draggable-border-lv"
-        @mousedown="onMouseDown"
-      />
-      <a-card
-        title="Default size card"
-        style="user-select: none"
-      >
-        <a-icon
-          slot="extra"
-          type="menu-unfold"
-          @click="rightPanelProps.collapsed = true"
-        />
-        <p>card content</p>
-        <p>card content</p>
-        <p>card content</p>
-      </a-card>
-    </a-layout-sider>
+      <template #second>
+        <a-card
+          title="Default size card"
+          style="user-select: none"
+        >
+          <a-icon
+            slot="extra"
+            type="menu-unfold"
+            @click="rightPanelProps.collapsed = true"
+          />
+          <p>card content</p>
+          <p>card content</p>
+          <p>card content</p>
+        </a-card>
+      </template>
+    </draggable-panel>
 
     <a-button
       v-if="rightPanelProps.collapsed"
@@ -59,7 +52,7 @@
       style="position: absolute; top: 50%; right: 12px"
       @click="rightPanelProps.collapsed = false"
     />
-  </a-layout>
+  </draggable-panel>
 </template>
 
 <script lang="ts">
@@ -69,10 +62,11 @@ import { State } from 'vuex-class'
 import TexturePreview from '@/components/texture-preview.vue'
 import Texture from '@/gengine/Texture'
 import TexturePool from '@/gengine/TexturePool'
+import DraggablePanel from '@/components/draggable-panel.vue'
 
 @Component({
   name: 'TextureListIndex',
-  components: { TexturePreview }
+  components: { DraggablePanel, TexturePreview }
 })
 export default class TextureListIndex extends Vue {
   @State(state => state.texture.textureNames)
@@ -81,34 +75,7 @@ export default class TextureListIndex extends Vue {
   private currentTextureNames = [] as Array<string>
 
   public rightPanelProps = {
-    collapsed: false,
-    dragging: false,
-    mousePrevPos: { x: 0, y: 0 },
-    width: 300
-  }
-
-  onMouseDown(e: MouseEvent) {
-    this.rightPanelProps.dragging = true
-    this.rightPanelProps.mousePrevPos = { x: e.clientX, y: e.clientY }
-
-    document.onmousemove = (e) => { this.onMouseMoving(e) }
-    document.onmouseup = () => { this.onMouseUp() }
-  }
-
-  onMouseMoving(e: MouseEvent) {
-    if (!this.rightPanelProps.dragging) {
-      return
-    }
-    const offsetWidth = e.clientX - this.rightPanelProps.mousePrevPos.x
-    this.rightPanelProps.width -= offsetWidth
-    this.rightPanelProps.mousePrevPos = { x: e.clientX, y: e.clientY }
-  }
-
-  onMouseUp() {
-    this.rightPanelProps.dragging = false
-
-    document.onmousemove = null
-    document.onmouseup = null
+    collapsed: false
   }
 
   get currentTextureName() {
@@ -122,14 +89,5 @@ export default class TextureListIndex extends Vue {
 </script>
 
 <style lang="less" scoped>
-.draggable-border-lv {
-  width: 5px;
-  background-color: #0000;
-  position: absolute;
-  z-index: 100;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  cursor: col-resize;
-}
+
 </style>
