@@ -24,7 +24,12 @@ const routes = [
   {
     path: '/sprite-import-demo',
     name: '精灵图导入测试',
-    component: () => import(/* webpackChunkName: "main" */ '@/views/sprite-import/sprite-import-demo.vue')
+    component: () => import(/* webpackChunkName: "demo" */ '@/views/sprite-import/sprite-import-demo.vue')
+  },
+  {
+    path: '/draggable-demo',
+    name: '可拖动面板示例',
+    component: () => import(/* webpackChunkName: "demo" */ '@/views/draggable-panel-demo-view.vue')
   }
 ]
 

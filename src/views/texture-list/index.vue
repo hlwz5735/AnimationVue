@@ -88,7 +88,6 @@ export default class TextureListIndex extends Vue {
   }
 
   onMouseDown(e: MouseEvent) {
-    console.log(e)
     this.rightPanelProps.dragging = true
     this.rightPanelProps.mousePrevPos = { x: e.clientX, y: e.clientY }
 
