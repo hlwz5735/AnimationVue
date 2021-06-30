@@ -143,9 +143,11 @@ export default class DraggablePanel extends Vue {
 
   .draggable-panel-main {
     width: 0;
+    overflow: auto;
   }
   .draggable-panel-second {
     position: relative;
+    overflow: auto;
   }
 
   .draggable-border {
