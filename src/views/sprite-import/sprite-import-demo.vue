@@ -73,7 +73,7 @@ const vm = Vue.extend({
       switch (key) {
         case 'lib-texture':
           if (this.$refs.libTexturePreview) {
-            (this.$refs.libTexturePreview as TexturePreview).drawLibTexture()
+            (this.$refs.libTexturePreview as TexturePreview).redraw()
           }
           break
         case 'sprite-set':

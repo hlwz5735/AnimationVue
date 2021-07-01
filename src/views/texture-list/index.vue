@@ -18,37 +18,9 @@
     </div>
     <template #second>
       <!-- 工具栏 -->
-      <div class="toolbar">
-        <a-space>
-          <a-tooltip
-            title="打开新纹理"
-            placement="bottom"
-          >
-            <a-button
-              icon="folder-open"
-            />
-          </a-tooltip>
-          <a-tooltip
-            title="新建纹理"
-            placement="bottom"
-          >
-            <a-button
-              icon="file-add"
-            />
-          </a-tooltip>
-          <a-tooltip
-            title="添加精灵帧"
-            placement="bottom"
-          >
-            <a-button
-              icon="download"
-            />
-          </a-tooltip>
-        </a-space>
-        <div class="text-right">
-          <a-checkbox v-model="isPropertiesPanelCollapsed" />
-        </div>
-      </div>
+      <toolbar
+        @update-texture="redrawTexture"
+      />
       <!-- 右侧主体部分 -->
       <draggable-panel
         sizing-dest="second"
@@ -57,6 +29,7 @@
       >
         <!-- 纹理预览和属性面板 -->
         <texture-preview
+          ref="texturePreviewRef"
           style="overflow: auto; height: 100%"
           :show-color-selector="false"
           :texture="getCurrentTexture()"
@@ -94,35 +67,57 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component'
 import Vue from 'vue'
-import { State } from 'vuex-class'
-import TexturePreview from '@/components/texture-preview.vue'
+import Component from 'vue-class-component'
+import { namespace, State } from 'vuex-class'
 import Texture from '@/gengine/Texture'
 import TexturePool from '@/gengine/TexturePool'
+import TexturePacker from '@/gengine/utils/TexturePacker'
 import DraggablePanel from '@/components/draggable-panel.vue'
+import TexturePreview from '@/components/texture-preview.vue'
+import Toolbar from './toolbar.vue'
+
+const TextureListViewStore = namespace('textureListView')
 
 @Component({
   name: 'TextureListIndex',
-  components: { DraggablePanel, TexturePreview }
+  components: { Toolbar, DraggablePanel, TexturePreview }
 })
 export default class TextureListIndex extends Vue {
   @State(state => state.texture.textureNames)
   private textureNames!: Array<string>
 
-  /** 用于左侧菜单选择的变量，实际只会包含1个元素 */
-  private currentTextureNames = [] as Array<string>
+  @TextureListViewStore.Getter('currentTextureName')
+  private currentTextureName!: string | null
 
-  /** 纹理属性面板是否折叠 */
-  public isPropertiesPanelCollapsed = true
+  @TextureListViewStore.Getter('currentTexturePacker')
+  private currentTexturePacker!: TexturePacker | null
 
-  /** 获取当前选择的纹理名称 */
-  get currentTextureName() {
-    return this.currentTextureNames[0]
+  get currentTextureNames() {
+    return this.$store.state.textureListView.currentTextureNames
+  }
+
+  set currentTextureNames(val: Array<string>) {
+    this.$store.commit('textureListView/setCurrentTextureNames', val)
+  }
+
+  get isPropertiesPanelCollapsed() {
+    return this.$store.state.textureListView.isPropertiesPanelCollapsed
+  }
+
+  set isPropertiesPanelCollapsed(val: boolean) {
+    this.$store.commit('textureListView/setPropertiesPanelCollapsed', val)
+  }
+
+  redrawTexture(): void {
+    (this.$refs.texturePreviewRef as TexturePreview).redraw()
   }
 
   /** 根据纹理名称，从纹理池中获取对应的纹理对象 */
   getCurrentTexture(): Texture | null | undefined {
+    if (!this.currentTextureName) {
+      return null
+    }
     return TexturePool.get(this.currentTextureName)
   }
 }
@@ -136,17 +131,5 @@ export default class TextureListIndex extends Vue {
   height: 100%;
   overflow: auto;
   border-right: 3px solid @border-color-base;
-}
-.toolbar {
-  background-color: white;
-  border-width: 1px;
-  border-style: none none solid none;
-  border-color: @border-color-base;
-  height: 48px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1em;
 }
 </style>

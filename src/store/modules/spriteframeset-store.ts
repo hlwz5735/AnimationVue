@@ -1,23 +1,19 @@
 import { ActionTree, Module, MutationTree } from 'vuex'
+import SpriteFrame from '@/gengine/SpriteFrame'
 import { RootState } from '@/store/types'
-import TexturePool from '@/gengine/TexturePool'
 
 const state = {
-  textureNames: [] as Array<string>
+  spriteFrameSetMap: new Map<string, SpriteFrame>()
 }
 
 export type State = typeof state
 
 const mutations: MutationTree<State> = {
-  setTextureNames(state: State, payload) {
-    state.textureNames = payload
-  }
+
 }
 
 const actions: ActionTree<State, RootState> = {
-  syncPool({ commit }) {
-    commit('setTextureNames', TexturePool.keys())
-  }
+
 }
 
 export default {

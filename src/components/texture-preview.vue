@@ -5,7 +5,7 @@
       <input
         v-model="previewBackgroundColor"
         type="color"
-        @change="drawLibTexture"
+        @change="redraw"
       >
     </div>
     <canvas
@@ -54,15 +54,15 @@ export default class TexturePreview extends Vue {
   }
 
   mounted() {
-    this.drawLibTexture()
+    this.redraw()
   }
 
   @Watch('texture')
   onTextureChange() {
-    this.drawLibTexture()
+    this.redraw()
   }
 
-  drawLibTexture() {
+  redraw() {
     if (!this.texture) {
       return
     }

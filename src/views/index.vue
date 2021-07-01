@@ -29,9 +29,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Texture from '@/gengine/Texture'
-import Color from '@/gengine/types/Color'
-import TexturePool from '@/gengine/TexturePool'
 
 @Component({
   name: 'IndexView'
@@ -39,12 +36,6 @@ import TexturePool from '@/gengine/TexturePool'
 export default class IndexView extends Vue {
   get selectedMenuKey() {
     return [this.$route.path]
-  }
-
-  async created() {
-    const texture = await Texture.createEmpty(1024, 1024, new Color(0, 0, 0, 0))
-    TexturePool.set(texture.path, texture)
-    await this.$store.dispatch('texture/syncPool')
   }
 }
 </script>

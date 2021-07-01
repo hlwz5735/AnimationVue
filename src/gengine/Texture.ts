@@ -1,6 +1,7 @@
 import Color from '@/gengine/types/Color'
 import { getClipRect } from '@/gengine/utils/ImageUtil'
 import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
+import { v4 as uuid } from 'uuid'
 
 /**
  * 加载状态
@@ -8,7 +9,7 @@ import { clipBitmap, removeBackgroundColor } from '@/gengine/utils/BitmapUtil'
  * PENDING - 加载中
  * LOADED - 加载完成
  */
-enum LoadStatus {
+export enum LoadStatus {
   UNLOADED = 0,
   PENDING = 1,
   LOADED = 2
@@ -20,7 +21,7 @@ enum LoadStatus {
  * CANVAS - 以 HTMLCanvasElement 作为纹理来源（可编辑）
  * 前者速度更快，后者可以对纹理进行编辑
  */
-enum TextureType {
+export enum TextureType {
   BITMAP,
   CANVAS
 }
@@ -78,7 +79,7 @@ export default class Texture {
     }
   }
 
-  static async createEmpty(width = 32, height = 32, color = Color.BLACK) {
+  static createEmpty(width = 32, height = 32, color = Color.BLACK) {
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = height
@@ -86,7 +87,13 @@ export default class Texture {
     context.fillStyle = color.toString()
     context.fillRect(0, 0, width, height)
 
-    return Texture.createByBitmap(await createImageBitmap(canvas), `native-${width}-${height}-${color.toString()}`)
+    const texture = new Texture()
+    // 新建的纹理默认路径是 native-uuid
+    texture.path = `native-${uuid()}`
+    texture.type = TextureType.CANVAS
+    texture.#canvas = canvas
+    texture.loadStatus = LoadStatus.LOADED
+    return texture
   }
 
   /**
