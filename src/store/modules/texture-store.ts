@@ -6,15 +6,15 @@ const state = {
   textureNames: [] as Array<string>
 }
 
-export type State = typeof state
+export type TextureState = typeof state
 
-const mutations: MutationTree<State> = {
-  setTextureNames(state: State, payload) {
+const mutations: MutationTree<TextureState> = {
+  setTextureNames(state: TextureState, payload) {
     state.textureNames = payload
   }
 }
 
-const actions: ActionTree<State, RootState> = {
+const actions: ActionTree<TextureState, RootState> = {
   syncPool({ commit }) {
     commit('setTextureNames', TexturePool.keys())
   }
@@ -25,4 +25,4 @@ export default {
   state,
   actions,
   mutations
-} as Module<State, RootState>
+} as Module<TextureState, RootState>

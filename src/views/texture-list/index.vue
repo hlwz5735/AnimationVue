@@ -25,14 +25,17 @@
         :default-sizing="300"
         style="height: calc(100% - 50px)"
       >
-        <!-- 纹理预览和属性面板 -->
-        <texture-preview
-          ref="texturePreviewRef"
-          style="overflow: auto; height: 100%"
-          :is-dirty.sync="isCurrentTextureDirty"
-          :show-color-selector="false"
-          :texture="getCurrentTexture()"
-        />
+        <div style="overflow: auto; height: 100%; position: relative">
+          <!-- 纹理预览和属性面板 -->
+          <texture-preview
+            ref="texturePreviewRef"
+            :is-dirty.sync="isCurrentTextureDirty"
+            :show-color-selector="false"
+            :texture="getCurrentTexture()"
+          />
+          <sprite-frame-set-demonstration />
+        </div>
+
         <template
           v-if="isPropertiesPanelCollapsed"
           #second
@@ -75,12 +78,13 @@ import TexturePacker from '@/gengine/utils/TexturePacker'
 import DraggablePanel from '@/components/draggable-panel.vue'
 import TexturePreview from '@/components/texture-preview.vue'
 import Toolbar from './toolbar.vue'
+import SpriteFrameSetDemonstration from '@/views/texture-list/sprite-frame-set-demonstration.vue'
 
 const TextureListViewStore = namespace('textureListView')
 
 @Component({
   name: 'TextureListIndex',
-  components: { Toolbar, DraggablePanel, TexturePreview }
+  components: { SpriteFrameSetDemonstration, Toolbar, DraggablePanel, TexturePreview }
 })
 export default class TextureListIndex extends Vue {
   @State(state => state.texture.textureNames)

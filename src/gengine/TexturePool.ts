@@ -28,11 +28,7 @@ export class TexturePool {
    * 列举所有纹理名组成的数组（按字母表排序）
    */
   keys() {
-    const res = [] as Array<string>
-    for (const key of this.innerPool.keys()) {
-      res.push(key)
-    }
-    return res.sort()
+    return Array.from(this.innerPool.keys()).sort()
   }
 }
 

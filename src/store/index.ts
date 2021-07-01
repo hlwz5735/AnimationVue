@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import { RootState } from './types'
 
 import TextureModule from './modules/texture-store'
-import SpriteFrameSetModule from './modules/spriteframeset-store'
+import SpriteFrameSetModule from './modules/sprite-frame-set-store'
 
 import TextureListViewStore from './modules/texture-list-view-store'
 

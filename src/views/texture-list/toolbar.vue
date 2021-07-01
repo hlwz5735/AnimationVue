@@ -73,8 +73,10 @@ import Texture from '@/gengine/Texture'
 import TexturePool from '@/gengine/TexturePool'
 import TexturePacker from '@/gengine/utils/TexturePacker'
 import TextureFilledException from '@/gengine/exceptions/TextureFilledException'
+import { SpriteFrameSet } from '@/gengine/SpriteFrameSet'
 
 const TextureListViewStore = namespace('textureListView')
+const SpriteFrameSetModule = namespace('spriteFrameSet')
 
 @Component({
   name: 'Toolbar'
@@ -85,6 +87,12 @@ export default class Toolbar extends Vue {
 
   @TextureListViewStore.Getter('currentTexturePacker')
   private currentTexturePacker!: TexturePacker | null
+
+  @TextureListViewStore.Getter('currentSpriteFrameSet')
+  private currentSpriteFrameSet!: SpriteFrameSet | null
+
+  @SpriteFrameSetModule.State('spriteFrameSetMap')
+  private spriteFrameSetMap!: Map<string, SpriteFrameSet>
 
   get isPropertiesPanelCollapsed() {
     return this.$store.state.textureListView.isPropertiesPanelCollapsed
@@ -109,6 +117,8 @@ export default class Toolbar extends Vue {
   newTexture() {
     const texture = Texture.createEmpty(1024, 1024, new Color(0, 0, 0, 0))
     TexturePool.set(texture.path, texture)
+    const spriteFrameSet = new SpriteFrameSet(texture)
+    this.spriteFrameSetMap.set(texture.path, spriteFrameSet)
     this.$store.dispatch('texture/syncPool')
   }
 
@@ -139,13 +149,19 @@ export default class Toolbar extends Vue {
     for (const elem of this.tempTextureList) {
       try {
         const sourceRect = this.currentTexturePacker.putSubTexture(elem)
-        SpriteFramePool.setWithDefaultName(SpriteFrame.createByTexture(elem.path, texture, sourceRect))
+        const spriteFrame = SpriteFrame.createByTexture(elem.path, texture, sourceRect)
+        // eslint-disable-next-line no-unused-expressions
+        this.currentSpriteFrameSet?.spriteFrameList.push(spriteFrame)
+        SpriteFramePool.setWithDefaultName(spriteFrame)
       } catch (ex) {
         if (ex instanceof TextureFilledException) {
           console.log(elem.path + '超限，开始扩大纹理大小')
           this.currentTexturePacker.resize(2)
           const sourceRect = this.currentTexturePacker.putSubTexture(elem)
-          SpriteFramePool.setWithDefaultName(SpriteFrame.createByTexture(elem.path, texture, sourceRect))
+          const spriteFrame = SpriteFrame.createByTexture(elem.path, texture, sourceRect)
+          // eslint-disable-next-line no-unused-expressions
+          this.currentSpriteFrameSet?.spriteFrameList.push(spriteFrame)
+          SpriteFramePool.setWithDefaultName(spriteFrame)
         }
       }
     }

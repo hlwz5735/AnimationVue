@@ -3,6 +3,7 @@ import { TextureType } from '@/gengine/Texture'
 import TexturePool from '@/gengine/TexturePool'
 import TexturePacker from '@/gengine/utils/TexturePacker'
 import { RootState } from '@/store/types'
+import { SpriteFrameSet } from '@/gengine/SpriteFrameSet'
 
 const state = {
   /** 纹理属性面板是否折叠 */
@@ -15,17 +16,24 @@ const state = {
   texturePackerMap: new Map<string, TexturePacker>()
 }
 
-export type State = typeof state
+export type TextureListViewState = typeof state
 
-const getters: GetterTree<State, RootState> = {
+const getters: GetterTree<TextureListViewState, RootState> = {
   /** 获取当前选择的纹理名称 */
-  currentTextureName(state: State): string | null {
+  currentTextureName(state: TextureListViewState): string | null {
     if (state.currentTextureNames.length < 1) {
       return null
     }
     return state.currentTextureNames[0]
   },
-  currentTexturePacker(state: State, getters): TexturePacker | null {
+  currentSpriteFrameSet(state: TextureListViewState, getters, rootState): SpriteFrameSet | null {
+    const currentTextureName = getters.currentTextureName
+    if (!currentTextureName) {
+      return null
+    }
+    return rootState.spriteFrameSet.spriteFrameSetMap.get(currentTextureName) || null
+  },
+  currentTexturePacker(state: TextureListViewState, getters): TexturePacker | null {
     const textureName = getters.currentTextureName
     if (!textureName) {
       return null
@@ -41,19 +49,19 @@ const getters: GetterTree<State, RootState> = {
   }
 }
 
-const mutations: MutationTree<State> = {
-  setPropertiesPanelCollapsed(state: State, payload: boolean) {
+const mutations: MutationTree<TextureListViewState> = {
+  setPropertiesPanelCollapsed(state: TextureListViewState, payload: boolean) {
     state.isPropertiesPanelCollapsed = payload
   },
-  setCurrentTextureNames(state: State, payload: Array<string>) {
+  setCurrentTextureNames(state: TextureListViewState, payload: Array<string>) {
     state.currentTextureNames = payload
   },
-  setCurrentTextureDirty(state: State, payload: boolean) {
+  setCurrentTextureDirty(state: TextureListViewState, payload: boolean) {
     state.isCurrentTextureDirty = payload
   }
 }
 
-const actions: ActionTree<State, RootState> = {
+const actions: ActionTree<TextureListViewState, RootState> = {
 
 }
 
@@ -63,4 +71,4 @@ export default {
   actions,
   mutations,
   getters
-} as Module<State, RootState>
+} as Module<TextureListViewState, RootState>
