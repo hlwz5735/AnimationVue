@@ -18,9 +18,7 @@
     </div>
     <template #second>
       <!-- 工具栏 -->
-      <toolbar
-        @update-texture="redrawTexture"
-      />
+      <toolbar />
       <!-- 右侧主体部分 -->
       <draggable-panel
         sizing-dest="second"
@@ -31,6 +29,7 @@
         <texture-preview
           ref="texturePreviewRef"
           style="overflow: auto; height: 100%"
+          :is-dirty.sync="isCurrentTextureDirty"
           :show-color-selector="false"
           :texture="getCurrentTexture()"
         />
@@ -45,7 +44,7 @@
           >
             <a-icon
               slot="extra"
-              type="menu-unfold"
+              type="close"
               @click="isPropertiesPanelCollapsed = false"
             />
             <div style="width: 260px">
@@ -109,8 +108,12 @@ export default class TextureListIndex extends Vue {
     this.$store.commit('textureListView/setPropertiesPanelCollapsed', val)
   }
 
-  redrawTexture(): void {
-    (this.$refs.texturePreviewRef as TexturePreview).redraw()
+  get isCurrentTextureDirty() {
+    return this.$store.state.textureListView.isCurrentTextureDirty
+  }
+
+  set isCurrentTextureDirty(val: boolean) {
+    this.$store.commit('textureListView/setCurrentTextureDirty', val)
   }
 
   /** 根据纹理名称，从纹理池中获取对应的纹理对象 */

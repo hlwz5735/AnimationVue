@@ -2,14 +2,6 @@
   <div class="toolbar">
     <a-space>
       <a-tooltip
-        title="打开新纹理"
-        placement="bottom"
-      >
-        <a-button
-          icon="folder-open"
-        />
-      </a-tooltip>
-      <a-tooltip
         title="新建纹理"
         placement="bottom"
       >
@@ -18,6 +10,24 @@
           @click="newTexture"
         />
       </a-tooltip>
+      <a-divider type="vertical" />
+      <a-tooltip
+        title="打开纹理"
+        placement="bottom"
+      >
+        <a-button
+          icon="folder-open"
+        />
+      </a-tooltip>
+      <a-tooltip
+        title="导入图集信息"
+        placement="bottom"
+      >
+        <a-button
+          icon="book"
+        />
+      </a-tooltip>
+      <a-divider type="vertical" />
       <a-tooltip
         title="添加精灵帧"
         placement="bottom"
@@ -39,12 +49,15 @@
         placement="bottom"
       >
         <a-button
-          icon="reload"
+          icon="file-sync"
         />
       </a-tooltip>
     </a-space>
     <div class="text-right">
-      <a-checkbox v-model="isPropertiesPanelCollapsed" />
+      <a-icon
+        :type="isPropertiesPanelCollapsed ? 'menu-unfold' : 'menu-fold'"
+        @click="isPropertiesPanelCollapsed = !isPropertiesPanelCollapsed"
+      />
     </div>
   </div>
 </template>
@@ -79,6 +92,14 @@ export default class Toolbar extends Vue {
 
   set isPropertiesPanelCollapsed(val: boolean) {
     this.$store.commit('textureListView/setPropertiesPanelCollapsed', val)
+  }
+
+  get isCurrentTextureDirty() {
+    return this.$store.state.textureListView.isCurrentTextureDirty
+  }
+
+  set isCurrentTextureDirty(val: boolean) {
+    this.$store.commit('textureListView/setCurrentTextureDirty', val)
   }
 
   /** 待处理的图片纹理列表 */
@@ -131,7 +152,7 @@ export default class Toolbar extends Vue {
     // 复位纹理列表
     this.tempTextureList = []
     // 告知父组件当前纹理已得更新
-    this.$emit('update-texture')
+    this.isCurrentTextureDirty = true
   }
 
   /** 根据纹理名称，从纹理池中获取对应的纹理对象 */

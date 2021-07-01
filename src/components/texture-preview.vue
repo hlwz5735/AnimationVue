@@ -47,6 +47,12 @@ export default class TexturePreview extends Vue {
   })
   private defaultBackgroundColor!: Color
 
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  private isDirty!: boolean
+
   public previewBackgroundColor!: Color
 
   created() {
@@ -60,6 +66,14 @@ export default class TexturePreview extends Vue {
   @Watch('texture')
   onTextureChange() {
     this.redraw()
+  }
+
+  @Watch('isDirty')
+  onDirtyChanges(val: boolean) {
+    if (val) {
+      this.redraw()
+      this.$emit('update:isDirty', false)
+    }
   }
 
   redraw() {

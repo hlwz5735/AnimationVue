@@ -9,6 +9,8 @@ const state = {
   isPropertiesPanelCollapsed: true,
   /** 用于左侧菜单选择的变量，实际只会包含1个元素 */
   currentTextureNames: [] as Array<string>,
+  /** 当前的纹理是否需要刷新 */
+  isCurrentTextureDirty: false,
   /** 纹理打包器列表 */
   texturePackerMap: new Map<string, TexturePacker>()
 }
@@ -43,9 +45,11 @@ const mutations: MutationTree<State> = {
   setPropertiesPanelCollapsed(state: State, payload: boolean) {
     state.isPropertiesPanelCollapsed = payload
   },
-
   setCurrentTextureNames(state: State, payload: Array<string>) {
     state.currentTextureNames = payload
+  },
+  setCurrentTextureDirty(state: State, payload: boolean) {
+    state.isCurrentTextureDirty = payload
   }
 }
 
