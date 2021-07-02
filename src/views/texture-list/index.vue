@@ -33,7 +33,9 @@
             :show-color-selector="false"
             :texture="getCurrentTexture()"
           />
-          <sprite-frame-set-demonstration />
+          <sprite-frame-set-demonstration
+            :is-dirty="isCurrentTextureDirty"
+          />
         </div>
 
         <template

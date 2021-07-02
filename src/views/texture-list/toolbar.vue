@@ -94,6 +94,9 @@ export default class Toolbar extends Vue {
   @SpriteFrameSetModule.State('spriteFrameSetMap')
   private spriteFrameSetMap!: Map<string, SpriteFrameSet>
 
+  @SpriteFrameSetModule.Mutation('newSpriteFrameSet')
+  private newSpriteFrameSet!: (payload: Texture) => void
+
   get isPropertiesPanelCollapsed() {
     return this.$store.state.textureListView.isPropertiesPanelCollapsed
   }
@@ -117,8 +120,7 @@ export default class Toolbar extends Vue {
   newTexture() {
     const texture = Texture.createEmpty(1024, 1024, new Color(0, 0, 0, 0))
     TexturePool.set(texture.path, texture)
-    const spriteFrameSet = new SpriteFrameSet(texture)
-    this.spriteFrameSetMap.set(texture.path, spriteFrameSet)
+    this.newSpriteFrameSet(texture)
     this.$store.dispatch('texture/syncPool')
   }
 
@@ -148,20 +150,12 @@ export default class Toolbar extends Vue {
     // 将待处理纹理列表中的纹理放入合图纹理之中
     for (const elem of this.tempTextureList) {
       try {
-        const sourceRect = this.currentTexturePacker.putSubTexture(elem)
-        const spriteFrame = SpriteFrame.createByTexture(elem.path, texture, sourceRect)
-        // eslint-disable-next-line no-unused-expressions
-        this.currentSpriteFrameSet?.spriteFrameList.push(spriteFrame)
-        SpriteFramePool.setWithDefaultName(spriteFrame)
+        this.putImgToTexture(elem, texture)
       } catch (ex) {
         if (ex instanceof TextureFilledException) {
           console.log(elem.path + '超限，开始扩大纹理大小')
           this.currentTexturePacker.resize(2)
-          const sourceRect = this.currentTexturePacker.putSubTexture(elem)
-          const spriteFrame = SpriteFrame.createByTexture(elem.path, texture, sourceRect)
-          // eslint-disable-next-line no-unused-expressions
-          this.currentSpriteFrameSet?.spriteFrameList.push(spriteFrame)
-          SpriteFramePool.setWithDefaultName(spriteFrame)
+          this.putImgToTexture(elem, texture)
         }
       }
     }
@@ -169,6 +163,16 @@ export default class Toolbar extends Vue {
     this.tempTextureList = []
     // 告知父组件当前纹理已得更新
     this.isCurrentTextureDirty = true
+  }
+
+  private putImgToTexture(img: Texture, texture: Texture) {
+    const sourceRect = this.currentTexturePacker!.putSubTexture(img)
+    const spriteFrame = SpriteFrame.createByTexture(img.path, texture, sourceRect)
+    if (this.currentSpriteFrameSet) {
+      // 注意，这样做并不能触发 Vuex 的变更响应
+      this.currentSpriteFrameSet.spriteFrameList.push(spriteFrame)
+    }
+    SpriteFramePool.setWithDefaultName(spriteFrame)
   }
 
   /** 根据纹理名称，从纹理池中获取对应的纹理对象 */

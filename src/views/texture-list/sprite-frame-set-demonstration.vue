@@ -5,7 +5,7 @@
   >
     <div class="box-positioner">
       <div
-        v-for="spriteFrame in currentSpriteFrameSet.spriteFrameList"
+        v-for="spriteFrame in spriteFrameList"
         :key="spriteFrame.name"
         class="box"
         :style="generateStyleObj(spriteFrame.sourceRect)"
@@ -20,6 +20,8 @@ import Component from 'vue-class-component'
 import { namespace } from 'vuex-class'
 import { SpriteFrameSet } from '@/gengine/SpriteFrameSet'
 import Rect from '@/gengine/types/Rect'
+import { Prop, Watch } from 'vue-property-decorator'
+import SpriteFrame from '@/gengine/SpriteFrame'
 
 const TextureListViewStore = namespace('textureListView')
 
@@ -27,8 +29,38 @@ const TextureListViewStore = namespace('textureListView')
   name: 'SpriteFrameSetDemonstration'
 })
 export default class SpriteFrameSetDemonstration extends Vue {
+  /** 因为使用了Map结构，所以 Vuex 不能响应数组内的变化，需要主动重新拉取数据 */
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  private isDirty!: boolean
+
   @TextureListViewStore.Getter('currentSpriteFrameSet')
   private currentSpriteFrameSet!: SpriteFrameSet | null
+
+  public spriteFrameList: Array<SpriteFrame> = []
+
+  mounted() {
+    this.spriteFrameList = this.currentSpriteFrameSet?.spriteFrameList || []
+  }
+
+  @Watch('currentSpriteFrameSet')
+  onCurrentSpriteFrameSetChanges(val: SpriteFrameSet | null) {
+    if (!val) {
+      this.spriteFrameList = []
+    } else {
+      this.spriteFrameList = val.spriteFrameList
+    }
+  }
+
+  @Watch('isDirty')
+  onDirtyChanges(val: boolean) {
+    if (val) {
+      const arr = this.currentSpriteFrameSet?.spriteFrameList || []
+      this.spriteFrameList = [...arr]
+    }
+  }
 
   generateStyleObj(sourceRect: Rect) {
     return {

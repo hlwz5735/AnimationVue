@@ -9,6 +9,10 @@ const state = {
 export type SpriteFrameSetState = typeof state
 
 const mutations: MutationTree<SpriteFrameSetState> = {
+  newSpriteFrameSet(state, payload) {
+    const spriteFrameSet = new SpriteFrameSet(payload)
+    state.spriteFrameSetMap.set(payload.path, spriteFrameSet)
+  }
 }
 
 const actions: ActionTree<SpriteFrameSetState, RootState> = {
