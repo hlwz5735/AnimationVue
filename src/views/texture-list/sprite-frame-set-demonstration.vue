@@ -2,13 +2,16 @@
   <div
     v-if="currentSpriteFrameSet"
     class="demonstration"
+    @click="selectingSpriteFrameName = ''"
   >
     <div class="box-positioner">
       <div
         v-for="spriteFrame in spriteFrameList"
         :key="spriteFrame.name"
         class="box"
+        :class="{ selected: selectingSpriteFrameName === spriteFrame.name }"
         :style="generateStyleObj(spriteFrame.sourceRect)"
+        @click.stop="selectingSpriteFrameName = spriteFrame.name"
       />
     </div>
   </div>
@@ -39,6 +42,14 @@ export default class SpriteFrameSetDemonstration extends Vue {
   @TextureListViewStore.Getter('currentSpriteFrameSet')
   private currentSpriteFrameSet!: SpriteFrameSet | null
 
+  get selectingSpriteFrameName(): string | null | undefined {
+    return this.$store.state.textureListView.selectingSpriteFrameName
+  }
+
+  set selectingSpriteFrameName(val: string | null | undefined) {
+    this.$store.commit('textureListView/setSelectingSpriteFrameName', val)
+  }
+
   public spriteFrameList: Array<SpriteFrame> = []
 
   mounted() {
@@ -62,7 +73,7 @@ export default class SpriteFrameSetDemonstration extends Vue {
     }
   }
 
-  generateStyleObj(sourceRect: Rect) {
+  private generateStyleObj(sourceRect: Rect) {
     return {
       left: sourceRect.x + 'px',
       top: sourceRect.y + 'px',
@@ -76,16 +87,23 @@ export default class SpriteFrameSetDemonstration extends Vue {
 <style lang="less" scoped>
 .demonstration {
   position: absolute;
-  top: 10px;
   left: 10px;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
   z-index: 100;
 
   .box-positioner {
     position: relative;
 
     .box {
-      border: 1px dashed #f00a;
       position: absolute;
+      &:hover {
+        border: 1px dashed #0f0;
+      }
+      &.selected, &:hover.selected {
+        border: 1px dashed #f00;
+      }
     }
   }
 }

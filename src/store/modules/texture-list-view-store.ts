@@ -13,7 +13,9 @@ const state = {
   /** 当前的纹理是否需要刷新 */
   isCurrentTextureDirty: false,
   /** 纹理打包器列表 */
-  texturePackerMap: new Map<string, TexturePacker>()
+  texturePackerMap: new Map<string, TexturePacker>(),
+  /** 当前选择的精灵帧名 */
+  selectingSpriteFrameName: ''
 }
 
 export type TextureListViewState = typeof state
@@ -58,6 +60,9 @@ const mutations: MutationTree<TextureListViewState> = {
   },
   setCurrentTextureDirty(state: TextureListViewState, payload: boolean) {
     state.isCurrentTextureDirty = payload
+  },
+  setSelectingSpriteFrameName(state: TextureListViewState, payload: string) {
+    state.selectingSpriteFrameName = payload
   }
 }
 

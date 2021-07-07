@@ -53,15 +53,9 @@
               @click="isPropertiesPanelCollapsed = false"
             />
             <div style="width: 260px">
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
-              <p>card content</p>
+              <sprite-frame-info
+                :sprite-frame="selectingSpriteFrame"
+              />
             </div>
           </a-card>
         </template>
@@ -73,23 +67,27 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { namespace, State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import Texture from '@/gengine/Texture'
 import TexturePool from '@/gengine/TexturePool'
+import SpriteFrame from '@/gengine/SpriteFrame'
+import SpriteFramePool from '@/gengine/SpriteFramePool'
 import TexturePacker from '@/gengine/utils/TexturePacker'
 import DraggablePanel from '@/components/draggable-panel.vue'
 import TexturePreview from '@/components/texture-preview.vue'
+import SpriteFrameInfo from '@/components/info-panel/sprite-frame-info.vue'
+import SpriteFrameSetDemonstration from './sprite-frame-set-demonstration.vue'
 import Toolbar from './toolbar.vue'
-import SpriteFrameSetDemonstration from '@/views/texture-list/sprite-frame-set-demonstration.vue'
 
 const TextureListViewStore = namespace('textureListView')
+const TextureModule = namespace('texture')
 
 @Component({
   name: 'TextureListIndex',
-  components: { SpriteFrameSetDemonstration, Toolbar, DraggablePanel, TexturePreview }
+  components: { SpriteFrameInfo, SpriteFrameSetDemonstration, Toolbar, DraggablePanel, TexturePreview }
 })
 export default class TextureListIndex extends Vue {
-  @State(state => state.texture.textureNames)
+  @TextureModule.State('textureNames')
   private textureNames!: Array<string>
 
   @TextureListViewStore.Getter('currentTextureName')
@@ -97,6 +95,9 @@ export default class TextureListIndex extends Vue {
 
   @TextureListViewStore.Getter('currentTexturePacker')
   private currentTexturePacker!: TexturePacker | null
+
+  @TextureListViewStore.State('selectingSpriteFrameName')
+  private selectingSpriteFrameName!: string | null | undefined
 
   get currentTextureNames() {
     return this.$store.state.textureListView.currentTextureNames
@@ -120,6 +121,14 @@ export default class TextureListIndex extends Vue {
 
   set isCurrentTextureDirty(val: boolean) {
     this.$store.commit('textureListView/setCurrentTextureDirty', val)
+  }
+
+  get selectingSpriteFrame(): SpriteFrame | null | undefined {
+    if (!this.selectingSpriteFrameName) {
+      return null
+    }
+
+    return SpriteFramePool.get(this.selectingSpriteFrameName)
   }
 
   /** 根据纹理名称，从纹理池中获取对应的纹理对象 */
